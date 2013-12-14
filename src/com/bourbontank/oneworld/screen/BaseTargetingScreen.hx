@@ -15,7 +15,7 @@ import flash.events.MouseEvent;
 class BaseTargetingScreen extends Screen
 {
 
-	var cursor:TargetCursor;
+	public var cursor:TargetCursor;
 	var targets:Array<Sprite>;
 	
 	public function new(display:Display, control:Control) 

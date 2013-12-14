@@ -15,7 +15,7 @@ class DebateChamber extends EntityContainerSprite
 {
 
 	var background:Sprite;
-	var screen:DebateScreen;
+	public var screen:DebateScreen;
 	
 	public function new(screen:DebateScreen) 
 	{
@@ -33,22 +33,17 @@ class DebateChamber extends EntityContainerSprite
 		
 		addChild(background);
 		
-		var delegate = new Delegate();
+		var delegate = new Delegate(this);
 		delegate.x = 200;
 		delegate.y = 100;
 		addDelegate(delegate);
-		
-		var projectile = new Projectile();
-		projectile.x = 200;
-		projectile.y = 100;
-		projectile.velocityX = 0.05;
-		projectile.velocityY = 0.2;
-		addProjectile(projectile);
 		
 		var table = new MeetingTable();
 		table.x = 400;
 		table.y = 400;
 		addTable(table);
+		
+		delegate.setCurrentTarget(table);
 	}
 	
 	public function addDelegate(delegate:Delegate) {

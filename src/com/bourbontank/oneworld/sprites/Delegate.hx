@@ -1,5 +1,6 @@
 package com.bourbontank.oneworld.sprites;
 
+import com.bourbontank.oneworld.screen.DebateScreen;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import spritesheet.AnimatedSprite;
@@ -9,15 +10,24 @@ import spritesheet.importers.BitmapImporter;
 import spritesheet.Spritesheet;
 import spritesheet.data.BehaviorData;
 import spritesheet.AnimatedSprite;
+import motion.Actuate;
 /**
  * ...
  * @author 
  */
 class Delegate extends EntitySprite
 {
-	public function new() 
+	var throwWait:Int = 0;
+	var throwRate:Int = 2000;
+	
+	var currentTarget:Sprite = null;
+	var chamber:DebateChamber;
+	
+	public function new(chamber:DebateChamber) 
 	{
 		super();
+		
+		this.chamber = chamber;
 		
 		animated = true;
 		mobile = true;
@@ -34,8 +44,69 @@ class Delegate extends EntitySprite
 		animatedSprite = new AnimatedSprite(spritesheet, true);
 		addChild(animatedSprite);
 		
-		animatedSprite.showBehaviors(["throw", "idling"]);
+		animatedSprite.showBehaviors(["idling"]);
 		
+	}
+	
+	public function setCurrentTarget(target:Sprite) {
+		currentTarget = target;
+	}
+	
+	public function animateThrow() {
+		animatedSprite.showBehavior("throw");
+	}
+	
+	public function throwProjectile() {
+		trace("Throwing!");
+		trace("Animating...");
+		animateThrow();
+		trace("Projectiling");
+		Actuate.timer (0.5).onComplete ( function() {
+			trace("Calculating...");
+			// Calculate required velocity
+			var projectile:Projectile = new Projectile();
+			
+			var sourceX:Float = x;
+			var sourceY:Float = y;
+			
+			//var targetX:Float = currentTarget.x;
+			//var targetY:Float = currentTarget.y;
+			var targetX:Float = chamber.screen.cursor.x;
+			var targetY:Float = chamber.screen.cursor.y;
+			
+			var projectile = new Projectile();
+			projectile.x = sourceX;
+			projectile.y = sourceY;
+			
+			var diffX:Float = targetX - sourceX;
+			var diffY:Float = targetY - sourceY;
+			
+			var angle:Float = Math.atan(diffX / diffY);
+			projectile.velocityX = projectile.speed * Math.sin(angle);
+			projectile.velocityY = projectile.speed * Math.cos(angle);
+			
+			if (diffY < 0) {
+				projectile.velocityX = -1 * projectile.velocityX;
+				projectile.velocityY = -1 * projectile.velocityY;
+			}
+			
+			chamber.addProjectile(projectile);
+			trace("Done!");
+		});
+		trace("Threw!");
+		
+	}
+	
+	override public function behave(delta:Int) {
+		
+		throwWait += delta;
+		
+		if ((throwWait >= throwRate) && (currentTarget != null)) {
+			throwWait -= throwRate;
+			
+			// Time to throw!
+			throwProjectile();
+		}
 	}
 	
 }
