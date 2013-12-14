@@ -1,0 +1,36 @@
+<?xml version="1.0" encoding="utf-8"?>
+<project>
+	<!-- NMML reference: https://gist.github.com/1763850 -->
+	
+	<!-- metadata, make sure 'package' is at least 3 segments (ie. com.mycompany.myproject) -->
+	<meta title="One World" package="com.bourbontank.oneworld" version="1.0.0" company="bourbontank" />
+	
+	<set name="teste" />
+	
+	<!-- output -->
+	<app main="com.bourbontank.oneworld.Main" file="OneWorld" path="bin" />
+	<app main="TestMain" file="test" path="bin" if="test" />
+	
+	<window background="#000000" fps="60" unless="test"/>
+	<window width="800" height="480" unless="mobile" />
+	<window orientation="landscape" vsync="false" antialiasing="0" if="cpp" unless="test"/>
+	
+	<!-- classpath, haxe libs -->
+	<source path="src" />
+	<source path="test" />
+	
+	<haxelib name="openfl" />
+	<haxelib name="actuate" />
+	<haxelib name="spritesheet" />
+	
+	<!-- assets -->
+	<assets path="assets/img" rename="img" include="*.png" />
+	<assets path="assets/sfx" rename="sfx" />
+	<assets path="assets/font" rename="font" type="font" include="*.ttf" />
+	
+	<!-- optimize output -->
+	<!--
+	<haxeflag name="-dce full" />
+	-->
+	
+</project>
