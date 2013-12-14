@@ -30,7 +30,7 @@ class Projectile extends EntitySprite
 		
 		var bitmapData:BitmapData = Assets.getBitmapData("img/projectile.png");
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width, bitmapData.height);
-		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 12, 1, 8, 8);
+		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 12, 1, 16, 16);
 		
 		spritesheet.addBehavior(new BehaviorData("moving", [0, 1, 2, 3], true, 10));
 		

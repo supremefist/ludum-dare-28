@@ -19,11 +19,13 @@ import motion.easing.Linear;
  */
 class Delegate extends EntitySprite
 {
+	var morale:Int = 100;
+	
 	var throwWait:Int = 0;
 	var baseThrowRate:Int = 2000;
 	var baseThrowVariance:Int = 1000;
 	var throwRate:Int;
-	var throwError:Float = 100;
+	var throwError:Float = 60;
 	
 	var actWait:Int = 0;
 	var baseActRate:Int = 2000;
@@ -35,7 +37,7 @@ class Delegate extends EntitySprite
 	
 	var crouchRange:Int = 13;
 	
-	var currentTarget:Sprite = null;
+	var currentTarget:Delegate = null;
 	var chamber:DebateChamber;
 	
 	var hairColor:UInt = 0x000000;
@@ -50,6 +52,7 @@ class Delegate extends EntitySprite
 	var rootY:Float;
 	
 	var actDuration:Int = 300;
+	var friendly:Bool = false;
 	
 	public function new(chamber:DebateChamber, x:Float, y:Float) 
 	{
@@ -74,6 +77,7 @@ class Delegate extends EntitySprite
 		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 13, 1, 32, 64);
 		
 		var frameRate = 10;
+		spritesheet.addBehavior(new BehaviorData("crouch", [5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7], false, frameRate));
 		spritesheet.addBehavior(new BehaviorData("throw", [0, 1, 2, 3, 0], false, frameRate));
 		spritesheet.addBehavior(new BehaviorData("idling", [0, 4, 0, 5, 0], true, frameRate));
 		spritesheet.addBehavior(new BehaviorData("strafing", [10, 0, 11, 0], true, frameRate));
@@ -136,6 +140,9 @@ class Delegate extends EntitySprite
 		return bitmapData;
 	}
 	
+	public function isAlive() {
+		return morale > 0;
+	}
 	
 	public function generateThrowRate() {
 		throwRate = Math.round(Utils.generateRandom(baseThrowRate, baseThrowVariance));
@@ -145,7 +152,7 @@ class Delegate extends EntitySprite
 		actRate = Math.round(Utils.generateRandom(baseThrowRate, baseThrowVariance));
 	}
 	
-	public function setCurrentTarget(target:Sprite) {
+	public function setCurrentTarget(target:Delegate) {
 		currentTarget = target;
 	}
 	
@@ -153,44 +160,56 @@ class Delegate extends EntitySprite
 		animatedSprite.showBehaviors(["throw", "idling"]);
 	}
 	
-	public function throwProjectile() {
-		animatedSprite.showBehavior("idling");
-		animateThrow();
-		Actuate.timer (actDuration / 1000).onComplete ( function() {
-			// Calculate required velocity
-			var projectile:Projectile = new Projectile();
-			
-			var sourceX:Float = x;
-			var sourceY:Float = y;
-			
-			//var targetX:Float = currentTarget.x;
-			//var targetY:Float = currentTarget.y;
-			var error:Float = (throwError * Math.random() - throwError / 2);
-			trace(error);
-			var targetX:Float = chamber.screen.cursor.x + error;
-			var targetY:Float = chamber.screen.cursor.y;
-			
-			var projectile = new Projectile();
-			projectile.x = sourceX;
-			projectile.y = sourceY;
-			
-			var diffX:Float = targetX - sourceX;
-			var diffY:Float = targetY - sourceY;
-			
-			var angle:Float = Math.atan(diffX / diffY);
-			projectile.velocityX = projectile.speed * Math.sin(angle);
-			projectile.velocityY = projectile.speed * Math.cos(angle);
-			
-			if (diffY < 0) {
-				projectile.velocityX = -1 * projectile.velocityX;
-				projectile.velocityY = -1 * projectile.velocityY;
+	public function getTarget():Delegate {
+		var iteration:Int = 0;
+		while (iteration < 10) {
+			var index:Int = Math.floor(chamber.friendlyDelegates.length * Math.random());
+			var delegate:Delegate = chamber.friendlyDelegates[index];
+			if (delegate.isAlive()) {
+				return delegate;
 			}
-			
-			chamber.addProjectile(projectile);
-		});
+			iteration += 1;
+		}
+		return null;
+	}
+	
+	public function throwProjectile() {
+		if (currentTarget != null) {
+			animatedSprite.showBehavior("idling");
+			animateThrow();
+			Actuate.timer (actDuration / 1200).onComplete ( function() {
+				// Calculate required velocity
+				var projectile:Projectile = new Projectile();
+				
+				var sourceX:Float = x;
+				var sourceY:Float = y;
+				
+				var targetX:Float = currentTarget.x;
+				var targetY:Float = currentTarget.y;
+				var error:Float = (throwError * Math.random() - throwError / 2);
+				
+				var projectile = new Projectile();
+				projectile.x = sourceX;
+				projectile.y = sourceY;
+				
+				var diffX:Float = targetX - sourceX;
+				var diffY:Float = targetY - sourceY;
+				
+				var angle:Float = Math.atan(diffX / diffY);
+				projectile.velocityX = projectile.speed * Math.sin(angle);
+				projectile.velocityY = projectile.speed * Math.cos(angle);
+				
+				if (diffY < 0) {
+					projectile.velocityX = -1 * projectile.velocityX;
+					projectile.velocityY = -1 * projectile.velocityY;
+				}
+				
+				chamber.addProjectile(projectile);
+			});
 		
 		
-		generateThrowRate();
+			generateThrowRate();
+		}
 	}
 	
 	public function stand() {
@@ -244,7 +263,6 @@ class Delegate extends EntitySprite
 			stand();
 		}
 		else {
-			trace(minX + ", " + maxX);
 			// Strafe or crouch
 			if (Math.random() > 0.66) {
 				crouch();
@@ -260,7 +278,15 @@ class Delegate extends EntitySprite
 		throwWait += delta;
 		actWait += delta;
 		
+		if ((currentTarget != null) && (!currentTarget.isAlive())) {
+			currentTarget = null;
+		}
+		if (!chamber.debateDone()) {
+			currentTarget = getTarget();
+		}
+		
 		if ((throwWait >= throwRate) && (actWait > actDuration) && (currentTarget != null) && (!crouched)) {
+			
 			// Time to throw!
 			throwProjectile();
 			

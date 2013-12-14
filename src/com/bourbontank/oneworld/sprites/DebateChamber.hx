@@ -21,17 +21,22 @@ class DebateChamber extends EntityContainerSprite
 	static public var friendlyDelegateXLocations:Array<Int> = [330, 130, 530];
 	static public var friendlyDelegateYLocations:Array<Int> = [400];
 	
+	public var friendlyDelegates:Array<FriendlyDelegate>;
+	public var enemyDelegates:Array<Delegate>;
 	
 	public function new(screen:DebateScreen) 
 	{
 		super();
 		this.screen = screen;
 		
+		friendlyDelegates = new Array<FriendlyDelegate>();
+		enemyDelegates = new Array<Delegate>();
+		
 		addBackground();
 		
-		addEnemyDelegates(1);
+		addEnemyDelegates(6);
 		
-		//addFriendlyDelegates(1);
+		addFriendlyDelegates(3);
 	}
 	
 	public function addEnemyDelegates(count:Int) {
@@ -50,7 +55,7 @@ class DebateChamber extends EntityContainerSprite
 			addDelegate(delegate);
 			addTable(table);
 			
-			delegate.setCurrentTarget(table);
+			enemyDelegates.push(delegate);
 		}
 		
 	}
@@ -66,14 +71,37 @@ class DebateChamber extends EntityContainerSprite
 			table.x = xLocation;
 			table.y = yLocation - 10;
 			
-			var delegate = new Delegate(this, xLocation + (table.width - 32) / 2, yLocation);
+			var delegate = new FriendlyDelegate(this, xLocation + (table.width - 32) / 2, yLocation);
 			
 			addTable(table);
 			addDelegate(delegate);
 			
-			delegate.setCurrentTarget(table);
+			friendlyDelegates.push(delegate);
 		}
 		
+	}
+	
+	public function debateDone():Bool {
+		var friendlyAlive = false;
+		for (delegate in friendlyDelegates) {
+			if (delegate.isAlive()) {
+				friendlyAlive = true;
+			}
+		}
+		
+		var enemyAlive = false;
+		for (delegate in enemyDelegates) {
+			if (delegate.isAlive()) {
+				enemyAlive = true;
+			}
+		}
+		
+		if ((friendlyAlive) && (enemyAlive)) {
+			return false;
+		}
+		else {
+			return true;
+		}
 	}
 	
 	public function addBackground() {
