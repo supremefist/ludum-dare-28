@@ -50,6 +50,8 @@ class DebateScreen extends BaseTargetingScreen
 		addCursor();
 		
 		addEventListener (Event.ENTER_FRAME, onEnterFrame);
+		
+		
 	}
 	
 	public function onEnterFrame(e:Event):Void {

@@ -7,7 +7,7 @@ import com.bourbontank.oneworld.CollisionDetection;
 
 import flash.ui.Mouse;
 import flash.events.MouseEvent;
-
+import flash.events.KeyboardEvent;
 /**
  * ...
  * @author 
@@ -25,11 +25,15 @@ class BaseTargetingScreen extends Screen
 		targets = new Array<Sprite>();
 		
 		addEventListener (MouseEvent.MOUSE_MOVE, mouseMoveEvent);
+		
 		addEventListener (MouseEvent.MOUSE_DOWN, mouseDownEvent);
+		addEventListener (MouseEvent.MOUSE_UP, mouseUpEvent);
 		
 		addEventListener (MouseEvent.MOUSE_OVER, mouseOverEvent);
 		addEventListener (MouseEvent.MOUSE_OUT, mouseOutEvent);
+		
 	}
+	
 	
 	public function addCursor() {
 		Mouse.hide();
@@ -57,8 +61,19 @@ class BaseTargetingScreen extends Screen
 	}
 	
 	public function mouseDownEvent(event:MouseEvent) {
-		trace(event.stageX + ", " + event.stageY);
-		trace(event.localX + ", " + event.localY);
+		targetMouseDown(event);
+	}
+	
+	public function mouseUpEvent(event:MouseEvent) {
+		targetMouseUp(event);
+	}
+	
+	dynamic public function targetMouseDown(event:MouseEvent) {
+		
+	}
+	
+	dynamic public function targetMouseUp(event:MouseEvent) {
+		
 	}
 	
 	public function addTarget(sprite:Sprite) {

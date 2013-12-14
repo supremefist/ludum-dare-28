@@ -20,12 +20,14 @@ import motion.easing.Linear;
  */
 class Delegate extends EntitySprite
 {
+	public static var MOVEMENT_SPEED_MODIFIER:Float = 0.1;
+	
 	var morale:Int = 100;
 	
 	var throwWait:Int = 0;
 	var baseThrowRate:Int = 2000;
 	var baseThrowVariance:Int = 1000;
-	var throwRate:Int;
+	var throwRate:Float;
 	var throwError:Float = 60;
 	
 	var actWait:Int = 0;
@@ -75,7 +77,8 @@ class Delegate extends EntitySprite
 		
 		var spritesheet = getSpriteSheet();
 		var frameRate = 10;
-		spritesheet.addBehavior(new BehaviorData("crouch", [5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7], false, frameRate));
+		spritesheet.addBehavior(new BehaviorData("crouch", [5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 , 7 , 7 , 7 , 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 , 7 , 7 , 7 , 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 , 7 , 7 , 7 , 7], false, frameRate));
+		spritesheet.addBehavior(new BehaviorData("crouching", [7], true, frameRate));
 		spritesheet.addBehavior(new BehaviorData("throw", [0, 1, 2, 3, 0], false, frameRate));
 		spritesheet.addBehavior(new BehaviorData("idling", [0, 4, 0, 5, 0], true, frameRate));
 		spritesheet.addBehavior(new BehaviorData("strafing", [10, 0, 11, 0], true, frameRate));
@@ -189,41 +192,38 @@ class Delegate extends EntitySprite
 	public function createProjectile():Projectile {
 		var projectile:Projectile = new Projectile();
 		projectile.friendly = false;
+		projectile.generateSpeed();
 		return projectile;
 	}
 	
-	public function throwProjectile() {
+	public function throwProjectile(targetX:Float, targetY:Float) {
 		animatedSprite.showBehavior("idling");
 		animateThrow();
 		Actuate.timer (actDuration / 1200).onComplete ( function() {
-			if (currentTarget != null) {
-				// Calculate required velocity
-				var projectile:Projectile = createProjectile();
-				
-				var targetX:Float = currentTarget.x;
-				var targetY:Float = currentTarget.y;
-				var sourceX:Float = x;
-				var sourceY:Float = y;
-				
-				var error:Float = (throwError * Math.random() - throwError / 2);
-				
-				projectile.x = sourceX;
-				projectile.y = sourceY;
-				
-				var diffX:Float = targetX - sourceX;
-				var diffY:Float = targetY - sourceY;
-				
-				var angle:Float = Math.atan(diffX / diffY);
-				projectile.velocityX = projectile.speed * Math.sin(angle);
-				projectile.velocityY = projectile.speed * Math.cos(angle);
-				
-				if (diffY < 0) {
-					projectile.velocityX = -1 * projectile.velocityX;
-					projectile.velocityY = -1 * projectile.velocityY;
-				}
-				
-				chamber.addProjectile(projectile);
+			// Calculate required velocity
+			var projectile:Projectile = createProjectile();
+			
+			var sourceX:Float = x;
+			var sourceY:Float = y;
+			
+			var error:Float = (throwError * Math.random() - throwError / 2);
+			
+			projectile.x = sourceX;
+			projectile.y = sourceY;
+			
+			var diffX:Float = targetX - sourceX;
+			var diffY:Float = targetY - sourceY;
+			
+			var angle:Float = Math.atan(diffX / diffY);
+			projectile.velocityX = projectile.speed * Math.sin(angle);
+			projectile.velocityY = projectile.speed * Math.cos(angle);
+			
+			if (diffY < 0) {
+				projectile.velocityX = -1 * projectile.velocityX;
+				projectile.velocityY = -1 * projectile.velocityY;
 			}
+			
+			chamber.addProjectile(projectile);
 		});
 	
 	
@@ -239,11 +239,13 @@ class Delegate extends EntitySprite
 	}
 	
 	public function crouch() {
-		animatedSprite.showBehavior("idling");
-		var targetY:Float = rootY + crouchRange;
-		Actuate.apply(this, { y: rootY});
-		Actuate.tween(this, actDuration / 1000, { y:targetY } );
-		crouched = true;
+		if (!crouched) {
+			animatedSprite.showBehavior("idling");
+			var targetY:Float = rootY + crouchRange;
+			Actuate.apply(this, { y: rootY});
+			Actuate.tween(this, actDuration / 1000, { y:targetY } );
+			crouched = true;
+		}
 	}
 	
 	public function strafe() {
@@ -292,6 +294,24 @@ class Delegate extends EntitySprite
 		generateActRate();
 	}
 	
+	public function takeAction(delta:Int) {
+		currentTarget = getTarget();
+			
+		if ((throwWait >= throwRate) && (actWait > actDuration) && (currentTarget != null) && (!crouched)) {
+			
+			// Time to throw!
+			throwProjectile(currentTarget.x, currentTarget.y);
+			
+			throwWait = 0;
+		}
+		else if ((throwWait > actDuration) && (actWait > actRate)) {
+			// We can move! (crouch, stand, strafe)
+			move();
+			
+			actWait = 0;
+		}
+	}
+	
 	override public function behave(delta:Int) {
 		if (morale > 0) {
 			throwWait += delta;
@@ -301,21 +321,7 @@ class Delegate extends EntitySprite
 				currentTarget = null;
 			}
 			if (!chamber.debateDone()) {
-				currentTarget = getTarget();
-			
-				if ((throwWait >= throwRate) && (actWait > actDuration) && (currentTarget != null) && (!crouched)) {
-					
-					// Time to throw!
-					throwProjectile();
-					
-					throwWait = 0;
-				}
-				else if ((throwWait > actDuration) && (actWait > actRate)) {
-					// We can move! (crouch, stand, strafe)
-					move();
-					
-					actWait = 0;
-				}
+				takeAction(delta);
 			}
 			else if (!resting) {
 				stand();

@@ -8,7 +8,7 @@ import com.bourbontank.oneworld.Utils;
 import com.bourbontank.oneworld.Main;
 import openfl.Assets;
 import com.bourbontank.oneworld.CollisionDetection;
-
+import com.bourbontank.oneworld.sprites.PlayerDelegate;
 /**
  * ...
  * @author 
@@ -44,7 +44,7 @@ class DebateChamber extends EntityContainerSprite
 		
 		addBackground();
 		
-		addEnemyDelegates(3);
+		addEnemyDelegates(6);
 		
 		addFriendlyDelegates(3);
 	}
@@ -81,7 +81,14 @@ class DebateChamber extends EntityContainerSprite
 			table.x = xLocation;
 			table.y = yLocation - 10;
 			
-			var delegate = new FriendlyDelegate(this, xLocation + (table.width - 32) / 2, yLocation);
+			var delegate:FriendlyDelegate;
+			if (i == 0) {
+				delegate = new PlayerDelegate(this, xLocation + (table.width - 32) / 2, yLocation);
+			}
+			else {
+				delegate = new FriendlyDelegate(this, xLocation + (table.width - 32) / 2, yLocation);
+			}
+			
 			
 			addTable(table);
 			addDelegate(delegate);
@@ -174,7 +181,7 @@ class DebateChamber extends EntityContainerSprite
 		for (projectile in friendlyProjectiles) {
 			if (projectile.mobile) {
 				for (enemy in enemyDelegates) {
-					if (!enemy.crouched) {
+					if ((!enemy.crouched) && (enemy.isAlive())) {
 						if (CollisionDetection.isColliding(projectile, enemy, this, true)) {
 							enemy.convince(projectile.potency);
 							
@@ -188,7 +195,7 @@ class DebateChamber extends EntityContainerSprite
 		for (projectile in enemyProjectiles) {
 			if (projectile.mobile) {
 				for (friend in friendlyDelegates) {
-					if (!friend.crouched) {
+					if ((!friend.crouched) && (friend.isAlive())) {
 						if (CollisionDetection.isColliding(projectile, friend, this, true)) {
 							friend.convince(projectile.potency);
 							

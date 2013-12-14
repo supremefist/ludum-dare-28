@@ -49,16 +49,21 @@ class FriendlyDelegate extends Delegate
 	override public function createProjectile():Projectile {
 		var projectile:Projectile = new Projectile();
 		projectile.friendly = true;
+		projectile.generateSpeed();
 		return projectile;
 	}
 	
 	override public function stand() {
-		animatedSprite.showBehavior("idling");
-		crouched = false;
+		if (crouched) {
+			animatedSprite.showBehavior("idling");
+			crouched = false;
+		}
 	}
 	
 	override public function crouch() {
-		animatedSprite.showBehavior("crouch");
-		crouched = true;
+		if (!crouched) {
+			animatedSprite.showBehavior("crouch");
+			crouched = true;
+		}
 	}
 }

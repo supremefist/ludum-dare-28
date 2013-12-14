@@ -19,7 +19,9 @@ import motion.Actuate;
  */
 class Projectile extends EntitySprite
 {
-	public var baseSpeed:Float = 0.2;
+	public static var PROJECTILE_SPEED_MODIFIER = 0.2;
+	
+	public var baseSpeed:Float;
 	public var baseVariance:Float = 0.05;
 	public var speed:Float;
 	public var potency:Int = 20;
@@ -29,6 +31,8 @@ class Projectile extends EntitySprite
 	public function new() 
 	{
 		super();
+		
+		baseSpeed = PROJECTILE_SPEED_MODIFIER;
 		
 		animated = true;
 		mobile = true;
