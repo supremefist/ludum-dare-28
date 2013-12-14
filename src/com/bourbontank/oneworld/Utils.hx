@@ -1,5 +1,7 @@
 package com.bourbontank.oneworld;
+import flash.geom.Rectangle;
 import flash.text.Font;
+import flash.utils.ByteArray;
 
 import openfl.Assets;
 import flash.display.Bitmap;
@@ -31,6 +33,11 @@ class Utils
 		return newBitmap;
 	}
 	
+	public static function generateRandom(baseValue:Float, variance:Float):Float {
+		var result:Float = baseValue + (variance * Math.random() - variance / 2);
+		return result;
+	}
+	
 	public static function resizeBitmapData( data:BitmapData, width:Int, height:Int ) : BitmapData
 	{
 		var scaleX:Float = width / data.width;
@@ -57,6 +64,16 @@ class Utils
 		textGraphic.text = text;
 		
 		return textGraphic;
+	}
+	
+	public static function replaceColor(bitmapData:BitmapData, oldColor:UInt, newColor:UInt) {
+		for (x in 0...bitmapData.width) {
+			for (y in 0...bitmapData.height) {
+				if (bitmapData.getPixel(x,y) == oldColor) {
+					bitmapData.setPixel(x,y,newColor);
+				}
+			}
+		}
 	}
 	
 	

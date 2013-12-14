@@ -4,6 +4,7 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import spritesheet.AnimatedSprite;
 import openfl.Assets;
+import com.bourbontank.oneworld.Utils;
 
 import spritesheet.importers.BitmapImporter;
 import spritesheet.Spritesheet;
@@ -15,7 +16,9 @@ import spritesheet.AnimatedSprite;
  */
 class Projectile extends EntitySprite
 {
-	public var speed:Float = 0.1;
+	public var baseSpeed:Float = 0.2;
+	public var baseVariance:Float = 0.05;
+	public var speed:Float;
 	
 	public function new() 
 	{
@@ -36,6 +39,11 @@ class Projectile extends EntitySprite
 		
 		animatedSprite.showBehavior("moving");
 		
+		generateSpeed();
+	}
+	
+	public function generateSpeed() {
+		speed = Utils.generateRandom(baseSpeed, baseVariance);
 	}
 	
 	

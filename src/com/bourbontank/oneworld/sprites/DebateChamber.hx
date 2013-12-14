@@ -16,6 +16,8 @@ class DebateChamber extends EntityContainerSprite
 
 	var background:Sprite;
 	public var screen:DebateScreen;
+	static public var enemyDelegateXLocations:Array<Int> = [330, 130, 530];
+	static public var enemyDelegateYLocations:Array<Int> = [50, 120];
 	
 	public function new(screen:DebateScreen) 
 	{
@@ -23,6 +25,33 @@ class DebateChamber extends EntityContainerSprite
 		this.screen = screen;
 		
 		addBackground();
+		
+		addEnemyDelegates(6);
+		
+		
+	}
+	
+	public function addEnemyDelegates(count:Int) {
+		for (i in 0...count) {
+			var xLocationIndex = i % 3;
+			var yLocationIndex = Math.ceil((i + 1) / 3.0) - 1;
+			var xLocation = enemyDelegateXLocations[xLocationIndex];
+			var yLocation = enemyDelegateYLocations[yLocationIndex];
+			
+			var table = new MeetingTable();
+			table.x = xLocation;
+			table.y = yLocation + 33;
+			
+			var delegate = new Delegate(this);
+			delegate.x = xLocation + (table.width - delegate.width) / 2;
+			delegate.y = yLocation;
+			
+			addDelegate(delegate);
+			addTable(table);
+			
+			delegate.setCurrentTarget(table);
+		}
+		
 	}
 	
 	public function addBackground() {
@@ -33,17 +62,6 @@ class DebateChamber extends EntityContainerSprite
 		
 		addChild(background);
 		
-		var delegate = new Delegate(this);
-		delegate.x = 200;
-		delegate.y = 100;
-		addDelegate(delegate);
-		
-		var table = new MeetingTable();
-		table.x = 400;
-		table.y = 400;
-		addTable(table);
-		
-		delegate.setCurrentTarget(table);
 	}
 	
 	public function addDelegate(delegate:Delegate) {

@@ -5,6 +5,7 @@ import flash.display.BitmapData;
 import flash.display.Sprite;
 import spritesheet.AnimatedSprite;
 import openfl.Assets;
+import com.bourbontank.oneworld.Utils;
 
 import spritesheet.importers.BitmapImporter;
 import spritesheet.Spritesheet;
@@ -18,7 +19,9 @@ import motion.Actuate;
 class Delegate extends EntitySprite
 {
 	var throwWait:Int = 0;
-	var throwRate:Int = 2000;
+	var baseRate:Int = 2000;
+	var baseVariance:Int = 1000;
+	var throwRate:Int;
 	
 	var currentTarget:Sprite = null;
 	var chamber:DebateChamber;
@@ -34,9 +37,41 @@ class Delegate extends EntitySprite
 		
 		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_front.png");
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
+		
+		// Let's randomize some characteristics
+		// Race (0: white, 1:black, 2:chinese: 3:indian)
+		var hairColor:UInt = 0x000000;
+		var skinColor:UInt = 0x000000;
+		var race:Int = Math.round(Math.random() * 4);
+
+		if (race == 0) {
+			// Caucasians can have blonde hair
+			if (Math.random() > 0.5) {
+				hairColor = 0xffff7d;
+			}
+		}
+		else if (race == 1) {
+			skinColor = 0x8c5536;
+		}
+		else if (race == 2) {
+			skinColor = 0xe9d3c6;
+		}
+		else if (race == 3) {
+			skinColor = 0xffc39f;
+		}
+		
+		
+		// Hair
+		if (hairColor != 0x000000) {
+			Utils.replaceColor(bitmapData, 0x050505, hairColor);
+		}
+		if (skinColor != 0x000000) {
+			Utils.replaceColor(bitmapData, 0xffdbb6, skinColor);
+		}
+		
 		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 12, 1, 32, 64);
 		
-		var frameRate = 5;
+		var frameRate = 10;
 		spritesheet.addBehavior(new BehaviorData("throw", [0, 1, 2, 3, 0], false, frameRate));
 		spritesheet.addBehavior(new BehaviorData("idling", [0, 4, 0, 5, 0], true, frameRate));
 		spritesheet.addBehavior(new BehaviorData("strafing", [10, 0, 11, 0], true, frameRate));
@@ -46,6 +81,11 @@ class Delegate extends EntitySprite
 		
 		animatedSprite.showBehaviors(["idling"]);
 		
+		generateThrowRate();
+	}
+	
+	public function generateThrowRate() {
+		throwRate = Math.round(Utils.generateRandom(baseRate, baseVariance));
 	}
 	
 	public function setCurrentTarget(target:Sprite) {
@@ -57,12 +97,8 @@ class Delegate extends EntitySprite
 	}
 	
 	public function throwProjectile() {
-		trace("Throwing!");
-		trace("Animating...");
 		animateThrow();
-		trace("Projectiling");
-		Actuate.timer (0.5).onComplete ( function() {
-			trace("Calculating...");
+		Actuate.timer (0.25).onComplete ( function() {
 			// Calculate required velocity
 			var projectile:Projectile = new Projectile();
 			
@@ -91,14 +127,13 @@ class Delegate extends EntitySprite
 			}
 			
 			chamber.addProjectile(projectile);
-			trace("Done!");
 		});
-		trace("Threw!");
 		
+		
+		generateThrowRate();
 	}
 	
 	override public function behave(delta:Int) {
-		
 		throwWait += delta;
 		
 		if ((throwWait >= throwRate) && (currentTarget != null)) {
