@@ -11,6 +11,7 @@ import spritesheet.importers.BitmapImporter;
 import spritesheet.Spritesheet;
 import spritesheet.data.BehaviorData;
 import spritesheet.AnimatedSprite;
+
 import motion.Actuate;
 import motion.easing.Linear;
 /**
@@ -45,7 +46,7 @@ class Delegate extends EntitySprite
 	var race:Int;
 	var tieColor:UInt;
 	
-	var crouched:Bool = false;
+	public var crouched:Bool = false;
 	
 	var minX:Float;
 	var maxX:Float;
@@ -53,6 +54,8 @@ class Delegate extends EntitySprite
 	
 	var actDuration:Int = 300;
 	var friendly:Bool = false;
+	
+	var resting:Bool = false;
 	
 	public function new(chamber:DebateChamber, x:Float, y:Float) 
 	{
@@ -70,12 +73,7 @@ class Delegate extends EntitySprite
 		animated = true;
 		mobile = true;
 		
-		var bitmapData:BitmapData = getBitmapData();
-		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
-		randomizeAppearance(bitmapData);
-		
-		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 13, 1, 32, 64);
-		
+		var spritesheet = getSpriteSheet();
 		var frameRate = 10;
 		spritesheet.addBehavior(new BehaviorData("crouch", [5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7,7 ,7 ,7 ,7 ,7], false, frameRate));
 		spritesheet.addBehavior(new BehaviorData("throw", [0, 1, 2, 3, 0], false, frameRate));
@@ -135,9 +133,24 @@ class Delegate extends EntitySprite
 		Utils.replaceColor(bitmapData, 0x0000ff, tieColor);
 	}
 	
-	public function getBitmapData() {
+	public function convince(potency:Int) {
+		morale -= potency;
+		
+		if (morale <= 0) {
+			animatedSprite.showBehavior("surrender");
+		}
+	}
+	
+	public function getSpriteSheet() {
 		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_front.png");
-		return bitmapData;
+		
+		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
+		randomizeAppearance(bitmapData);
+		
+		// The height of 33 is just because they're standing behind a table!
+		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 13, 1, 32, 33);
+	
+		return spritesheet;
 	}
 	
 	public function isAlive() {
@@ -173,22 +186,27 @@ class Delegate extends EntitySprite
 		return null;
 	}
 	
+	public function createProjectile():Projectile {
+		var projectile:Projectile = new Projectile();
+		projectile.friendly = false;
+		return projectile;
+	}
+	
 	public function throwProjectile() {
-		if (currentTarget != null) {
-			animatedSprite.showBehavior("idling");
-			animateThrow();
-			Actuate.timer (actDuration / 1200).onComplete ( function() {
+		animatedSprite.showBehavior("idling");
+		animateThrow();
+		Actuate.timer (actDuration / 1200).onComplete ( function() {
+			if (currentTarget != null) {
 				// Calculate required velocity
-				var projectile:Projectile = new Projectile();
-				
-				var sourceX:Float = x;
-				var sourceY:Float = y;
+				var projectile:Projectile = createProjectile();
 				
 				var targetX:Float = currentTarget.x;
 				var targetY:Float = currentTarget.y;
+				var sourceX:Float = x;
+				var sourceY:Float = y;
+				
 				var error:Float = (throwError * Math.random() - throwError / 2);
 				
-				var projectile = new Projectile();
 				projectile.x = sourceX;
 				projectile.y = sourceY;
 				
@@ -205,11 +223,11 @@ class Delegate extends EntitySprite
 				}
 				
 				chamber.addProjectile(projectile);
-			});
-		
-		
-			generateThrowRate();
-		}
+			}
+		});
+	
+	
+		generateThrowRate();
 	}
 	
 	public function stand() {
@@ -275,28 +293,35 @@ class Delegate extends EntitySprite
 	}
 	
 	override public function behave(delta:Int) {
-		throwWait += delta;
-		actWait += delta;
-		
-		if ((currentTarget != null) && (!currentTarget.isAlive())) {
-			currentTarget = null;
-		}
-		if (!chamber.debateDone()) {
-			currentTarget = getTarget();
-		}
-		
-		if ((throwWait >= throwRate) && (actWait > actDuration) && (currentTarget != null) && (!crouched)) {
+		if (morale > 0) {
+			throwWait += delta;
+			actWait += delta;
 			
-			// Time to throw!
-			throwProjectile();
+			if ((currentTarget != null) && (!currentTarget.isAlive())) {
+				currentTarget = null;
+			}
+			if (!chamber.debateDone()) {
+				currentTarget = getTarget();
 			
-			throwWait = 0;
-		}
-		else if ((throwWait > actDuration) && (actWait > actRate)) {
-			// We can move! (crouch, stand, strafe)
-			move();
-			
-			actWait = 0;
+				if ((throwWait >= throwRate) && (actWait > actDuration) && (currentTarget != null) && (!crouched)) {
+					
+					// Time to throw!
+					throwProjectile();
+					
+					throwWait = 0;
+				}
+				else if ((throwWait > actDuration) && (actWait > actRate)) {
+					// We can move! (crouch, stand, strafe)
+					move();
+					
+					actWait = 0;
+				}
+			}
+			else if (!resting) {
+				stand();
+				animatedSprite.showBehaviors(["strafing"]);
+				resting = true;
+			}
 		}
 	}
 	

@@ -2,6 +2,13 @@ package com.bourbontank.oneworld.sprites;
 import flash.display.BitmapData;
 import flash.display.Sprite;
 import openfl.Assets;
+
+import spritesheet.importers.BitmapImporter;
+import spritesheet.Spritesheet;
+import spritesheet.data.BehaviorData;
+import spritesheet.AnimatedSprite;
+
+
 /**
  * ...
  * @author 
@@ -15,9 +22,15 @@ class FriendlyDelegate extends Delegate
 		friendly = true;
 	}
 	
-	override public function getBitmapData() {
+	override public function getSpriteSheet() {
 		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_back.png");
-		return bitmapData;
+		
+		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
+		randomizeAppearance(bitmapData);
+		
+		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 13, 1, 32, 64);
+	
+		return spritesheet;
 	}
 	
 	override public function getTarget():Delegate {
@@ -31,6 +44,12 @@ class FriendlyDelegate extends Delegate
 			iteration += 1;
 		}
 		return null;
+	}
+	
+	override public function createProjectile():Projectile {
+		var projectile:Projectile = new Projectile();
+		projectile.friendly = true;
+		return projectile;
 	}
 	
 	override public function stand() {

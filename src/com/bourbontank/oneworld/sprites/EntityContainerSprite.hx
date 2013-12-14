@@ -37,12 +37,6 @@ class EntityContainerSprite extends Sprite
 	public function updateEntities(delta:Int) {
 		for (entity in entities) {
 			entity.update(delta);
-			
-			// Remove dead entities
-			if (offScreen(entity)) {
-				entity.parent.removeChild(entity);
-				entities.remove(entity);
-			}
 		}
 	}
 }

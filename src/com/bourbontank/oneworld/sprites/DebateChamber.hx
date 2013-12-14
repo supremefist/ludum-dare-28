@@ -7,6 +7,8 @@ import flash.display.Sprite;
 import com.bourbontank.oneworld.Utils;
 import com.bourbontank.oneworld.Main;
 import openfl.Assets;
+import com.bourbontank.oneworld.CollisionDetection;
+
 /**
  * ...
  * @author 
@@ -24,6 +26,11 @@ class DebateChamber extends EntityContainerSprite
 	public var friendlyDelegates:Array<FriendlyDelegate>;
 	public var enemyDelegates:Array<Delegate>;
 	
+	public var friendlyProjectiles:Array<Projectile>;
+	public var enemyProjectiles:Array<Projectile>;
+	
+	public var completed:Bool = false;
+	
 	public function new(screen:DebateScreen) 
 	{
 		super();
@@ -32,9 +39,12 @@ class DebateChamber extends EntityContainerSprite
 		friendlyDelegates = new Array<FriendlyDelegate>();
 		enemyDelegates = new Array<Delegate>();
 		
+		friendlyProjectiles = new Array<Projectile>();
+		enemyProjectiles = new Array<Projectile>();
+		
 		addBackground();
 		
-		addEnemyDelegates(6);
+		addEnemyDelegates(3);
 		
 		addFriendlyDelegates(3);
 	}
@@ -122,11 +132,72 @@ class DebateChamber extends EntityContainerSprite
 	public function addProjectile(projectile:Projectile) {
 		entities.push(projectile);
 		addChild(projectile);
+		
+		if (projectile.friendly) {
+			friendlyProjectiles.push(projectile);
+		}
+		else {
+			enemyProjectiles.push(projectile);
+		}
 	}
 	
 	public function addTable(table:MeetingTable) {
 		entities.push(table);
 		addChild(table);
+	}
+	
+	public function removeProjectile(projectile:Projectile, list:Array<Projectile>) {
+		projectile.parent.removeChild(projectile);
+		list.remove(projectile);
+	}
+	
+	public function clearDeadProjectiles(projectiles:Array<Projectile>) {
+		// Remove offscreen projectiles
+		for (projectile in projectiles) {
+			if (offScreen(projectile)) {
+				removeProjectile(projectile, projectiles);
+			}
+		}
+	}
+	
+	public function collideProjectiles(projectiles:Array<Projectile>, delegates:Array<Delegate>) {
+		
+	}
+	
+	override public function updateEntities(delta:Int) {
+		super.updateEntities(delta);
+		
+		clearDeadProjectiles(friendlyProjectiles);
+		clearDeadProjectiles(enemyProjectiles);
+		
+		
+		for (projectile in friendlyProjectiles) {
+			if (projectile.mobile) {
+				for (enemy in enemyDelegates) {
+					if (!enemy.crouched) {
+						if (CollisionDetection.isColliding(projectile, enemy, this, true)) {
+							enemy.convince(projectile.potency);
+							
+							projectile.hit();
+						}
+					}
+				}
+			}
+		}
+		
+		for (projectile in enemyProjectiles) {
+			if (projectile.mobile) {
+				for (friend in friendlyDelegates) {
+					if (!friend.crouched) {
+						if (CollisionDetection.isColliding(projectile, friend, this, true)) {
+							friend.convince(projectile.potency);
+							
+							projectile.hit();
+						}
+					}
+				}
+			}
+		}
 	}
 	
 }
