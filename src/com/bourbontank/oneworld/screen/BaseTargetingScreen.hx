@@ -12,7 +12,7 @@ import flash.events.MouseEvent;
  * ...
  * @author 
  */
-class BaseTargetingScreen extends BaseAnimatedScreen
+class BaseTargetingScreen extends Screen
 {
 
 	var cursor:TargetCursor;
@@ -34,7 +34,7 @@ class BaseTargetingScreen extends BaseAnimatedScreen
 	public function addCursor() {
 		Mouse.hide();
 		cursor = new TargetCursor();
-		cursor.visible = true;
+		cursor.visible = false;
 		addChild(cursor);
 	}
 	

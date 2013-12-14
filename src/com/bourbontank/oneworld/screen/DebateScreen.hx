@@ -1,6 +1,9 @@
 package com.bourbontank.oneworld.screen;
 import com.bourbontank.oneworld.Control;
 import com.bourbontank.oneworld.Display;
+import com.bourbontank.oneworld.sprites.DebateChamber;
+import com.bourbontank.oneworld.sprites.Delegate;
+import com.bourbontank.oneworld.sprites.EntityContainerSprite;
 import com.bourbontank.oneworld.sprites.TargetCursor;
 import com.bourbontank.oneworld.Utils;
 import flash.display.Bitmap;
@@ -19,6 +22,7 @@ import spritesheet.data.BehaviorData;
 import spritesheet.AnimatedSprite;
 import flash.ui.Mouse;
 import com.bourbontank.oneworld.Main;
+import flash.Lib;
 
 
 /**
@@ -28,31 +32,36 @@ import com.bourbontank.oneworld.Main;
 class DebateScreen extends BaseTargetingScreen
 {
 
-	var background:Sprite;
+	var chamber:EntityContainerSprite;
+	private var lastTime:Int;
+	
+		
+		
 	
 	public function new(display:Display, control:Control) 
 	{
 		super(display, control);
 		
-		addBackground();
+		lastTime = Lib.getTimer();
 		
-		var box:Sprite = new Sprite();
-		box.graphics.beginFill(0xFFFFFF, 1.0);
-		box.graphics.drawRect(0, 0, 100, 50);
-		box.x = 100;
-		box.y = 200;
-		addChild(box);
-		
-		addTarget(box);
+		chamber = new DebateChamber(this);
+		addChild(chamber);
 		
 		addCursor();
+		
+		addEventListener (Event.ENTER_FRAME, onEnterFrame);
 	}
 	
-	public function addBackground() {
-		background = new Sprite();
-		background.graphics.beginFill(0x000000, 1.0);
-		background.graphics.drawRect(0, 0, Main.screenWidth, Main.screenHeight);
-		addChild(background);
+	public function onEnterFrame(e:Event):Void {
+		var delta = Lib.getTimer() - lastTime;
+		
+		chamber.updateEntities(delta);
+		
+		//updateBorder(delta);
+		lastTime = Lib.getTimer();
+		
+		
 	}
+	
 	
 }

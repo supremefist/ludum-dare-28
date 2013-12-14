@@ -43,7 +43,7 @@ class TargetCursor extends Sprite
 		
 		var bullseye:Sprite = new Sprite();
 		
-		bullseye.graphics.beginFill(0xFF0000, 1.0);
+		bullseye.graphics.beginFill(0xAAFFAA, 1.0);
 		bullseye.graphics.drawRect( -1, -1, 3, 3);
 		addChild(bullseye);
 		

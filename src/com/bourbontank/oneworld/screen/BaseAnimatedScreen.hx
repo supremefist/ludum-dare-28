@@ -8,7 +8,6 @@ import spritesheet.importers.BitmapImporter;
 import spritesheet.Spritesheet;
 import spritesheet.data.BehaviorData;
 import spritesheet.AnimatedSprite;
-import flash.Lib;
 
 /**
  * ...
@@ -18,7 +17,6 @@ class BaseAnimatedScreen extends Screen
 {
 
 	var animatedSprites:Array<AnimatedSprite>;
-	private var lastTime:Int;
 	
 	function new(display:Display, control:Control) 
 	{
@@ -26,21 +24,15 @@ class BaseAnimatedScreen extends Screen
 		
 		animatedSprites = new Array<AnimatedSprite>();
 		
-		lastTime = Lib.getTimer();
-		
-		addEventListener (Event.ENTER_FRAME, onEnterFrame);
 	}
 	
-	public function onEnterFrame(e:Event):Void {
-		var delta = Lib.getTimer() - lastTime;
-		
+	public function addAnimatedSprite(animatedSprite:AnimatedSprite) {
+		animatedSprites.push(animatedSprite);
+	}
+	
+	public function animateSprites(delta:Int):Void {
 		for (animatedSprite in animatedSprites) {
 			animatedSprite.update(delta);
 		}
-		
-		//updateBorder(delta);
-		lastTime = Lib.getTimer();
-		
-		
 	}
 }
