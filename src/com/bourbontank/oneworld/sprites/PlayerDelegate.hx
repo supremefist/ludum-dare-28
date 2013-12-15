@@ -83,7 +83,7 @@ class PlayerDelegate extends FriendlyDelegate
 	}
 	
 	override public function generateThrowRate() {
-		throwRate = baseThrowRate;
+		throwRate = baseThrowRate + chamber.screen.control.playerThrowRateBonus;
 	}
 	
 	override public function takeAction(delta:Int) {
@@ -142,6 +142,7 @@ class PlayerDelegate extends FriendlyDelegate
 		var projectile:Projectile = new Projectile();
 		projectile.friendly = true;
 		projectile.speed = projectile.baseSpeed;
+		projectile.potency += chamber.screen.control.playerPotencyBonus;
 		return projectile;
 	}
 	

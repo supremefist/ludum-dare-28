@@ -175,7 +175,7 @@ class WorldScreen extends BaseClickingScreen
 			if (continent.highlighted) {
 				if (!continent.friendly) {
 					// To battle!
-					var debateScreen:DebateScreen = new DebateScreen(display, control, continent.difficulty * 2 + 2, 1 + control.friendlyDelegates);
+					var debateScreen:DebateScreen = new DebateScreen(display, control, continent);
 					debateScreen.continent = continent;
 					
 					display.setScreen(debateScreen);
@@ -189,7 +189,8 @@ class WorldScreen extends BaseClickingScreen
 	
 	dynamic public function clicked(e:MouseEvent) {
 		if (done) {
-			
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			control.restart();
 		}
 		else if (conversing) {
 			if ((conversation != null) && (conversation.length > 0)) {

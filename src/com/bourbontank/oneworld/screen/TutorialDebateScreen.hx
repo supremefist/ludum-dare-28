@@ -39,7 +39,7 @@ class TutorialDebateScreen extends DebateScreen
 	
 	public function new(display:Display, control:Control) 
 	{
-		super(display, control, 0, 0);
+		super(display, control, null);
 		
 		conversing = true;
 		

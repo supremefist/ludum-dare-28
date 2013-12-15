@@ -21,7 +21,7 @@ class DebateChamber extends EntityContainerSprite
 	static public var enemyDelegateXLocations:Array<Int> = [330, 130, 530];
 	static public var enemyDelegateYLocations:Array<Int> = [50, 120];
 	static public var friendlyDelegateXLocations:Array<Int> = [330, 130, 530];
-	static public var friendlyDelegateYLocations:Array<Int> = [400];
+	static public var friendlyDelegateYLocations:Array<Int> = [400, 330];
 	
 	public var friendlyDelegates:Array<FriendlyDelegate>;
 	public var enemyDelegates:Array<Delegate>;

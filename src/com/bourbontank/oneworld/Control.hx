@@ -23,6 +23,9 @@ class Control
 	public var continents:Array<Continent>;
 	
 	public var friendlyDelegates:Int = 0;
+	public var playerThrowRateBonus:Int = 0;
+	public var playerPotencyBonus:Int = 0;
+	public var playerMoraleBonus:Int = 0;
 	
 	public function buildConversations() {
 		// Intro
@@ -40,6 +43,18 @@ class Control
 		addContinents();
 		
 		buildConversations();
+	}
+	
+	public function restart() {
+		friendlyDelegates = 0;
+		playerMoraleBonus = 0;
+		playerPotencyBonus = 0;
+		playerThrowRateBonus = 0;
+		
+		initData();
+		
+		var screen:Screen = new SplashScreen(display, this);
+		display.setScreen(screen);
 	}
 	
 	public function addContinents() {
@@ -88,9 +103,12 @@ class Control
 		continent.y = worldStartY + 305;
 		continents.push(continent);
 		
-		for (i in 0...continents.length - 1) {
+		for (i in 0...continents.length) {
 			continents[i].setFriendly(true);
 		}
+		
+		continents[0].setFriendly(false);
+		continents[5].setFriendly(false);
 	}
 	
 	public function worldPhase() {
@@ -118,10 +136,10 @@ class Control
 		//display.setScreen(new SplashScreen(display, this));
 		//display.setScreen(new BriefingScreen(display, this, introConversation, new WorldScreen(display, this)));
 		//display.setScreen(new TutorialDebateScreen(display, this));
-		//display.setScreen(new DebateScreen(display, this, 6, 3));
+		display.setScreen(new DebateScreen(display, this, null));
 		//sound.playMusic();
 		
-		worldPhase();
+		//worldPhase();
 	}
 	
 }

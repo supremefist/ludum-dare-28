@@ -14,13 +14,14 @@ class DetailBox extends Sprite
 	var nameBox:TextField = null;
 	var difficultBox:TextField = null;
 	var specialtyBox:TextField = null;
+	var statusBox:TextField = null;
 	
 	public function new() 
 	{
 		super();
 		
 		var boxWidth:Int = 250;
-		var boxHeight:Int = 80;
+		var boxHeight:Int = 100;
 		
 		background = new TextBackgroundSprite(boxWidth, boxHeight);
 		addChild(background);
@@ -44,6 +45,13 @@ class DetailBox extends Sprite
 		specialtyBox.width = nameBox.width;
 		specialtyBox.wordWrap = true;
 		addChild(specialtyBox);
+		
+		statusBox = Utils.createTextSprite("", 0x000000, 12);
+		statusBox.x += nameBox.x;
+		statusBox.y += nameBox.y + 70;
+		statusBox.width = nameBox.width;
+		statusBox.wordWrap = true;
+		addChild(statusBox);
 	}
 	
 	public function setContinent(continent:Continent) {
@@ -68,6 +76,12 @@ class DetailBox extends Sprite
 			specialtyString = "Argument potency";
 		}
 		specialtyBox.text = "Specialty: " + specialtyString;
+		
+		var statusString = "Status: Oblivious";
+		if (continent.friendly) {
+			statusString = "Status: Informed";
+		}
+		statusBox.text = statusString;
 	}
 	
 }
