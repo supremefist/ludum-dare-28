@@ -15,7 +15,7 @@ import flash.events.KeyboardEvent;
 class BaseTargetingScreen extends Screen
 {
 
-	public var cursor:TargetCursor;
+	public var cursor:Sprite;
 	var targets:Array<Sprite>;
 	
 	public function new(display:Display, control:Control) 

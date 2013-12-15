@@ -1,6 +1,6 @@
 package com.bourbontank.oneworld;
 import com.bourbontank.oneworld.screen.DebateScreen;
-import com.bourbontank.oneworld.screen.MenuScreen;
+import com.bourbontank.oneworld.screen.SplashScreen;
 import flash.display.Sprite;
 
 /**
@@ -22,7 +22,7 @@ class Control
 	}
 	
 	public function start() {
-		display.setScreen(new DebateScreen(display, this));
+		display.setScreen(new SplashScreen(display, this));
 		//sound.playMusic();
 	}
 	
