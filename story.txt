@@ -1,0 +1,64 @@
+INTRO
+=====
+
+Narrator: You are the king of the great kingdom of Monaco!  You have ruled it honorably for many years.  Unfortunately, the scientist in Monaco has determined that the world will be uninhabitable within one year due to global warming!  This is likely to affect us negatively.  You know what they say: "You only get one world!".
+
+Scientist: Your Majesty, I do believe it's time for Monaco to step in and save the world! We shall do it by convincing all the nations of the world to abandon their selfish carbon emmissions, continent by continent!  How hard could it be?  Your debating skills are unmatched.
+
+You: Aye, they are unmatched, but I swore I would never use them again!  Remember what happened last time when I debated that young man...
+
+Scientist: That was a child, your Majesty.
+
+You: Child, who cares.  The point is that I am forced to take up debating again!  Where do we begin?
+
+Scientist: It begins right here.  You must convince the queen that our cause is just!
+
+You: The horror!  She is as ruthless in love as she is in debate!
+
+TUTORIAL BATTLE
+===============
+
+King: Well, my queen, as you may have heard, our vast kingdom is under threat of destruction by...
+
+Queen: Silence! We shall debate this in the modern way: honorable battle of crumpled-up paper!  Prepare to be annihilated!
+
+King: Very well.  I am nothing if not adaptable with the times!
+
+Overlay: Prepare for debate... DEBATE!
+
+* Show controls and point to morale.
+
+WORLD SCREEN
+============
+
+Instructions: Please select a continent to convince next.
+
+* Africa: morale (difficulty 1)
+* South America: morale (difficulty 1)
+* Asia: quickness of wit (difficulty 2)
+* Australia: argument potency (difficulty 2)
+* Europe: quickness of wit (difficulty 3)
+* North America: argument potency (difficulty 3)
+
+NORMAL BATTLE
+=============
+
+Overlay: Prepare for debate... DEBATE!
+
+Defeat: Show defeat screen
+Victory: Show victory screen
+
+VICTORY
+=======
+
+The earth is saved!  Carbon emmissions have reduced by more than 1%!  All thanks to the vast and famous nation of Monaco!
+
+(Play again)
+
+DEFEAT
+=======
+
+The earth is lies in ruins!  Well, maybe not ruins, but carbon emmissions are holding steady!  Earth faces certain destruction sometime in the future...
+
+(Play again)
+
