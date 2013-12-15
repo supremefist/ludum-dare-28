@@ -30,6 +30,8 @@ class PlayerDelegate extends FriendlyDelegate
 	{
 		super(chamber, x, y);
 		
+		morale = 100;
+		
 		Lib.current.stage.addEventListener (KeyboardEvent.KEY_DOWN, keyDown);
 		Lib.current.stage.addEventListener (KeyboardEvent.KEY_UP, keyUp);
 		

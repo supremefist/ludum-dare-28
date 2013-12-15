@@ -145,7 +145,11 @@ class Delegate extends EntitySprite
 	}
 	
 	public function getSpriteSheet() {
-		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_front.png");
+		var bitmapFilename = "img/delegate_front.png";
+		if (Math.random() > 0.5) {
+			bitmapFilename = "img/delegate_front_female.png";
+		}
+		var bitmapData:BitmapData = Assets.getBitmapData(bitmapFilename);
 		
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
 		randomizeAppearance(bitmapData);
