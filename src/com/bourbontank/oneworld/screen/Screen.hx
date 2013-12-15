@@ -27,4 +27,8 @@ class Screen extends Sprite
 		return null;
 	}
 	
+	public function start() {
+		
+	}
+	
 }

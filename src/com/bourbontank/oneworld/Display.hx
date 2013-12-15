@@ -26,6 +26,8 @@ class Display
 		}
 		rootSprite.addChildAt(screen, 0);
 		currentScreen = screen;
+		
+		screen.start();
 	}
 	
 }

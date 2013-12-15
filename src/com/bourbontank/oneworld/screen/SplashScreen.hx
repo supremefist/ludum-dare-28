@@ -37,7 +37,8 @@ class SplashScreen extends BaseClickingScreen
 	private var text:Sprite;
 	
 	private var startText:TextField;
-	
+	private var slideText:TextField;
+	private var worldText:TextField;
 	
 	public function new(display:Display, control:Control) 
 	{
@@ -61,6 +62,7 @@ class SplashScreen extends BaseClickingScreen
 		
 		addCursor();
 		
+		targetMouseDown = clicked;
 	}
 	
 	public function addText() {
@@ -75,26 +77,22 @@ class SplashScreen extends BaseClickingScreen
 		textField.height = 400;
 		text.addChild(textField);
 		
-		textField = Utils.createTextSprite("You only get one...", 0xFF4F63, 40);
-		textField.x = -500;
-		textField.y = 100;
-		textField.width = 800;
-		textField.height = 400;
-		text.addChild(textField);
-		Actuate.tween(textField, 3.0, { x:100 } ).ease(Linear.easeNone);
+		slideText = Utils.createTextSprite("You only get one...", 0xFF4F63, 40);
+		slideText.x = -500;
+		slideText.y = 100;
+		slideText.width = 800;
+		slideText.height = 400;
+		text.addChild(slideText);
 		
-		textField = Utils.createTextSprite("WORLD", 0xFFED4F, 80);
-		textField.x = 250;
-		textField.y = 150;
-		textField.alpha = 0.0;
-		textField.width = 800;
-		textField.height = 400;
-		text.addChild(textField);
-		Actuate.timer(3.0).onComplete(function() {
-			Actuate.tween(textField, 3.0, { alpha:1.0 } ).ease(Linear.easeNone);
-		});
+		worldText = Utils.createTextSprite("WORLD", 0xFFED4F, 80);
+		worldText.x = 250;
+		worldText.y = 150;
+		worldText.alpha = 0.0;
+		worldText.width = 800;
+		worldText.height = 400;
+		text.addChild(worldText);
 		
-		startText = Utils.createTextSprite("click to start", 0xFFFFFF, 16);
+		startText = Utils.createTextSprite("click to start...", 0xFFFFFF, 16);
 		startText.x = 340;
 		startText.y = 280;
 		startText.width = 800;
@@ -102,11 +100,21 @@ class SplashScreen extends BaseClickingScreen
 		text.addChild(startText);
 		
 		startText.alpha = 0.0;
+		
+		addChild(text);
+	}
+	
+	override public function start() {
+		Actuate.tween(slideText, 2.0, { x:200 } ).ease(Linear.easeNone);
+		
+		Actuate.timer(3.0).onComplete(function() {
+			Actuate.tween(worldText, 2.0, { alpha:1.0 } ).ease(Linear.easeNone);
+		});
+		
 		Actuate.timer(5.0).onComplete(function() {
 			fadeTextIn();
 		});
 		
-		addChild(text);
 	}
 	
 	public function fadeTextIn() {
@@ -156,5 +164,7 @@ class SplashScreen extends BaseClickingScreen
 		globe.showBehavior("spin");
 	}
 	
-	
+	dynamic public function clicked(e:MouseEvent) {
+		control.worldPhase();
+	}
 }
