@@ -1,6 +1,7 @@
 package com.bourbontank.oneworld;
 import com.bourbontank.oneworld.screen.BriefingScreen;
 import com.bourbontank.oneworld.screen.DebateScreen;
+import com.bourbontank.oneworld.screen.Screen;
 import com.bourbontank.oneworld.screen.SplashScreen;
 import com.bourbontank.oneworld.screen.TutorialDebateScreen;
 import com.bourbontank.oneworld.screen.WorldScreen;
@@ -43,38 +44,60 @@ class Control
 		continents = new Array<Continent>();
 		var continent;
 		
-		continent = new Continent(display, this, "img/continents/north_america.png");
+		continent = new Continent(display, this, "North America", "img/continents/north_america.png");
+		continent.specialty = 2; // Argument potency
+		continent.difficulty = 2;
 		continent.x = worldStartX;
 		continent.y = worldStartY;
 		continents.push(continent);
 		
-		continent = new Continent(display, this, "img/continents/south_america.png");
+		continent = new Continent(display, this, "South America", "img/continents/south_america.png");
+		continent.specialty = 0; // Strong morale
+		continent.difficulty = 0;
 		continent.x = worldStartX + 180;
 		continent.y = worldStartY + 270;
 		continents.push(continent);
 		
-		continent = new Continent(display, this, "img/continents/europe.png");
+		continent = new Continent(display, this, "Europe", "img/continents/europe.png");
+		continent.specialty = 1; // Quickness of wit
+		continent.difficulty = 2;
 		continent.x = worldStartX + 320;
 		continent.y = worldStartY;
 		continents.push(continent);
 		
-		continent = new Continent(display, this, "img/continents/africa.png");
+		continent = new Continent(display, this, "Africa", "img/continents/africa.png");
+		continent.specialty = 0; // Strong morale
+		continent.difficulty = 0;
 		continent.x = worldStartX + 330;
 		continent.y = worldStartY + 200;
 		continents.push(continent);
 		
-		continent = new Continent(display, this, "img/continents/asia.png");
+		continent = new Continent(display, this, "Asia", "img/continents/asia.png");
+		continent.specialty = 1; // Quickness of wit
+		continent.difficulty = 1;
 		continent.x = worldStartX + 423;
 		continent.y = worldStartY + 27;
 		continents.push(continent);
 		
-		continent = new Continent(display, this, "img/continents/australia.png");
+		continent = new Continent(display, this, "Australia", "img/continents/australia.png");
+		continent.specialty = 2; // Argument potency
+		continent.difficulty = 1;
 		continent.x = worldStartX + 608;
 		continent.y = worldStartY + 305;
 		continents.push(continent);
 	}
 	
 	public function worldPhase() {
+		var screen:Screen = new WorldScreen(display, this);
+		screen.conversation = [];
+		screen.conversation.push(new ChatLine("Scientist", "Scientist: Now that the queen is on our side, she is allowing is to leave the castle!  We can debate the rulers of any continent we like!  Select the continent we will debate next."));
+		screen.conversation.push(new ChatLine("Scientist", "Scientist: The continents marked in red are not convinced that global warming is real, yet.  We have to convince them all!"));
+		screen.conversing = true;
+		
+		display.setScreen(screen);
+		
+		
+		
 		var done:Bool = true;
 		for (continent in continents) {
 			if (!continent.friendly) {
@@ -82,10 +105,7 @@ class Control
 			}
 		}
 		
-		if (!done) {
-			display.setScreen(new WorldScreen(display, this));
-		}
-		else {
+		if (done) {
 			// Game finished!
 		}
 	}
@@ -103,9 +123,11 @@ class Control
 	public function start() {
 		//display.setScreen(new SplashScreen(display, this));
 		//display.setScreen(new BriefingScreen(display, this, introConversation, new WorldScreen(display, this)));
-		display.setScreen(new TutorialDebateScreen(display, this));
+		//display.setScreen(new TutorialDebateScreen(display, this));
 		//display.setScreen(new DebateScreen(display, this, 6, 3));
 		//sound.playMusic();
+		
+		worldPhase();
 	}
 	
 }

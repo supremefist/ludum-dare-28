@@ -36,6 +36,7 @@ class Projectile extends EntitySprite
 		
 		animated = true;
 		mobile = true;
+		collidable = true;
 		
 		var bitmapData:BitmapData = Assets.getBitmapData("img/projectile.png");
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width, bitmapData.height);

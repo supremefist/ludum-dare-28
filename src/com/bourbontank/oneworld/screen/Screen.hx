@@ -23,9 +23,12 @@ class Screen extends Sprite
 	private var leftSpeakerBox:SpeakerSprite;
 	private var rightSpeakerBox:SpeakerSprite;
 	private var currentlyVisible:BriefSprite;
-	private var conversation:Array<ChatLine> = null;
-	private var afterConversationScreen:Screen;
+	public var conversation:Array<ChatLine> = null;
+	public var conversing:Bool = false;
 	
+	private var showingHelp:Bool = false;
+	
+	private var helpSprite:Sprite = null;
 	
 	public function new(display:Display, control:Control) 
 	{
@@ -38,6 +41,26 @@ class Screen extends Sprite
 	public function nextScreen():Screen {
 		throw "Not implemented.";
 		return null;
+	}
+	
+	public function addConversationBoxes() {
+		narrateSprite = new NarrateSprite();
+		narrateSprite.alpha = 0.0;
+		narrateSprite.x = 250;
+		narrateSprite.y = 30;
+		addChild(narrateSprite);
+		
+		leftSpeakerBox = new SpeakerSprite(40, -30);
+		leftSpeakerBox.alpha = 0.0;
+		leftSpeakerBox.x = 50;
+		leftSpeakerBox.y = 250;
+		addChild(leftSpeakerBox);
+		
+		rightSpeakerBox = new SpeakerSprite(0, 310);
+		rightSpeakerBox.alpha = 0.0;
+		rightSpeakerBox.x = 405;
+		rightSpeakerBox.y = 250;
+		addChild(rightSpeakerBox);
 	}
 	
 	public function start() {
@@ -69,10 +92,14 @@ class Screen extends Sprite
 				hideSprite(currentlyVisible);
 			}
 			showSprite(speakerBox);
+			
 			speakerBox.setAssetString(assetString);
-			speakerBox.setText(line);
+			
 			currentlyVisible = speakerBox;
 		}
+		
+		
+		speakerBox.setText(line);
 	}
 	
 	public function showLine(line:ChatLine) {
@@ -91,15 +118,12 @@ class Screen extends Sprite
 	}
 	
 	public function continueConversation() {
-		if ((conversation != null) && (conversation.length > 0)) {
-			var nextLine:ChatLine = conversation[0];
-			conversation.remove(nextLine);
-			
-			showLine(nextLine);
-		}
-		else if (afterConversationScreen != null) {
-			display.setScreen(afterConversationScreen);
-		}
+		
+		
+		var nextLine:ChatLine = conversation[0];
+		conversation.remove(nextLine);
+		
+		showLine(nextLine);
 	}
 	
 }

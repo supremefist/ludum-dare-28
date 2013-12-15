@@ -122,6 +122,13 @@ class DebateChamber extends EntityContainerSprite
 			return false;
 		}
 		else {
+			for (projectile in enemyProjectiles) {
+				projectile.collidable = false;
+			}
+			for (projectile in friendlyProjectiles) {
+				projectile.collidable = false;
+			}
+			
 			return true;
 		}
 	}
@@ -172,10 +179,6 @@ class DebateChamber extends EntityContainerSprite
 		}
 	}
 	
-	public function collideProjectiles(projectiles:Array<Projectile>, delegates:Array<Delegate>) {
-		
-	}
-	
 	override public function updateEntities(delta:Int) {
 		super.updateEntities(delta);
 		
@@ -184,7 +187,7 @@ class DebateChamber extends EntityContainerSprite
 		
 		
 		for (projectile in friendlyProjectiles) {
-			if (projectile.mobile) {
+			if ((projectile.mobile) && (projectile.collidable)) {
 				for (enemy in enemyDelegates) {
 					if ((!enemy.crouched) && (enemy.isAlive())) {
 						if (CollisionDetection.isColliding(projectile, enemy, this, true)) {
@@ -198,7 +201,7 @@ class DebateChamber extends EntityContainerSprite
 		}
 		
 		for (projectile in enemyProjectiles) {
-			if (projectile.mobile) {
+			if ((projectile.mobile) && (projectile.collidable)) {
 				for (friend in friendlyDelegates) {
 					if ((!friend.crouched) && (friend.isAlive())) {
 						if (CollisionDetection.isColliding(projectile, friend, this, true)) {

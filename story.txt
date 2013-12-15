@@ -33,12 +33,12 @@ WORLD SCREEN
 
 Instructions: Please select a continent to convince next.
 
-* Africa: morale (difficulty 1)
-* South America: morale (difficulty 1)
-* Asia: quickness of wit (difficulty 2)
-* Australia: argument potency (difficulty 2)
-* Europe: quickness of wit (difficulty 3)
-* North America: argument potency (difficulty 3)
+* Africa: morale (difficulty 0)
+* South America: morale (difficulty 0)
+* Asia: quickness of wit (difficulty 1)
+* Australia: argument potency (difficulty 1)
+* Europe: quickness of wit (difficulty 2)
+* North America: argument potency (difficulty 2)
 
 NORMAL BATTLE
 =============

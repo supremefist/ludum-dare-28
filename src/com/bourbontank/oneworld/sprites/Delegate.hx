@@ -22,7 +22,7 @@ class Delegate extends EntitySprite
 {
 	public static var MOVEMENT_SPEED_MODIFIER:Float = 0.1;
 	
-	var morale:Int = 100;
+	var morale:Int = 0;
 	
 	var throwWait:Int = 0;
 	var baseThrowRate:Int = 2000;

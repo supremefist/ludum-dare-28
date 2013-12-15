@@ -35,32 +35,16 @@ class BriefingScreen extends BaseClickingScreen
 	private var fader:Sprite;
 	private var lastTime:Int;
 	
-	public function new(display:Display, control:Control, conversation:Array<ChatLine>, afterConversationScreen:Screen)
+	public function new(display:Display, control:Control, conversation:Array<ChatLine>)
 	{
 		super(display, control);
 		
 		var font:Font = Utils.getFont();
-		this.afterConversationScreen = afterConversationScreen;
 		this.conversation = conversation;
 		
 		addBackground();
 		
-		narrateSprite = new NarrateSprite();
-		narrateSprite.x = 250;
-		narrateSprite.y = 30;
-		addChild(narrateSprite);
-		
-		leftSpeakerBox = new SpeakerSprite(40, -30);
-		leftSpeakerBox.alpha = 0.0;
-		leftSpeakerBox.x = 50;
-		leftSpeakerBox.y = 250;
-		addChild(leftSpeakerBox);
-		
-		rightSpeakerBox = new SpeakerSprite(0, 310);
-		rightSpeakerBox.alpha = 0.0;
-		rightSpeakerBox.x = 405;
-		rightSpeakerBox.y = 250;
-		addChild(rightSpeakerBox);
+		addConversationBoxes();
 		
 		fader = new Sprite();
 		fader.graphics.beginFill(0x000000, 1.0);

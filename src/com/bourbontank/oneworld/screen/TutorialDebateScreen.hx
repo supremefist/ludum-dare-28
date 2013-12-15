@@ -33,17 +33,21 @@ import com.bourbontank.oneworld.ChatLine;
  */
 class TutorialDebateScreen extends DebateScreen
 {
-	private var conversing:Bool = true;
+	private var battled:Bool = false;
+	private var epilogue:Bool = false;
+	private var done:Bool = false;
 	
 	public function new(display:Display, control:Control) 
 	{
 		super(display, control, 0, 0);
 		
+		conversing = true;
+		
 		conversation = new Array<ChatLine>();
 		conversation.push(new ChatLine("King", "You: Well, my queen, as you may have heard, our vast kingdom is under threat of destruction by..."));
 		conversation.push(new ChatLine("Queen", "Queen: Silence!  We shall debate this in the modern way: honorable battle of crumpled-up paper!  Prepare to be annihilated!"));
 		conversation.push(new ChatLine("King", "King: Very well.  I am nothing if not adaptable to change!"));
-		conversation.push(new ChatLine("Narrator", "Debate using the keys shown.  Your current morale is visible in the lower right corner.  Once this is depleted, you have lost the debate!  Outwit all your opponents to win the debate!"));
+		conversation.push(new ChatLine("Narrator", "Debate using the following keys:\nS or down: crouch\nA or left: strafe left\nD or right: strafe right\nYour current morale is visible in the lower right corner.  Once this is depleted, you have lost the debate!  Outwit all your opponents to win the debate!"));
 		
 		
 		narrateSprite = new NarrateSprite();
@@ -80,25 +84,52 @@ class TutorialDebateScreen extends DebateScreen
 			rightSpeakerBox.animate(delta);
 		}
 		
+		if (battled) {
+			if (chamber.debateDone()) {
+				targetMouseDown = clicked;
+				battled = false;
+				conversing = true;
+				epilogue = true;
+				// Tutorial completed!
+				conversation = new Array<ChatLine>();
+				conversation.push(new ChatLine("Queen", "Queen: Perhaps there is a chance for the earth after all.  Your debating skills are indeed advanced!"));
+				conversation.push(new ChatLine("King", "You: I was just about to say the same thing!"));
+				
+				continueConversation();
+			}
+		}
+		
 		//updateBorder(delta);
 		lastTime = Lib.getTimer();
 	}
 	
 	dynamic public function clicked(e:MouseEvent) {
-		if ((conversation != null) && (conversation.length > 0)) {
-			continueConversation();
-		}
-		else {
-			// Conversation completed!
-			conversing = false;
-			
-			if (currentlyVisible != null) {
-				hideSprite(currentlyVisible);
+		if ((conversing) && (!epilogue)) {
+			if ((conversation != null) && (conversation.length > 0)) {
+				continueConversation();
 			}
-			
-			chamber.addFriendlyDelegates(1);
-			chamber.addEnemyDelegate(0, false);
+			else {
+				// Conversation completed!
+				if (currentlyVisible != null) {
+					hideSprite(currentlyVisible);
+				}
+				
+				chamber.addFriendlyDelegates(1);
+				chamber.addEnemyDelegate(0, false);
+				
+				conversing = false;
+				battled = true;
+			}
 		}
+		else if (epilogue) {
+			if ((conversation != null) && (conversation.length > 0)) {
+				continueConversation();
+			}
+			else {
+				control.worldPhase();
+			}
+		}
+		
 	}
 	
 	

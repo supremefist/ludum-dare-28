@@ -28,11 +28,15 @@ class Continent extends Sprite
 	
 	var highlightedMultiplier:Float = 0.9;
 	var unhighlightedMultiplier:Float = 0.5;
+	public var continentName:String = "";
+	public var difficulty:Int = 0;
+	public var specialty:Int = 0;
 	
-	
-	public function new(display:Display, control:Control, bitmapString:String) 
+	public function new(display:Display, control:Control, continentName:String, bitmapString:String) 
 	{
 		super();
+		
+		this.continentName = continentName;
 		
 		var friendlyBitmapData = Assets.getBitmapData (bitmapString);
 		friendlyBitmapData = Utils.resizeBitmapData(friendlyBitmapData, friendlyBitmapData.width * 2, friendlyBitmapData.height * 2);
@@ -43,7 +47,6 @@ class Continent extends Sprite
 		enemyBitmapData = Utils.resizeBitmapData(enemyBitmapData, enemyBitmapData.width * 2, enemyBitmapData.height * 2);
 		enemyBitmap = new Bitmap(enemyBitmapData);
 		enemyBitmap.transform.colorTransform = new ColorTransform(unhighlightedMultiplier, 0, 0);
-		
 		
 		setFriendly(false);
 	}

@@ -14,6 +14,7 @@ class EntitySprite extends Sprite
 	public var mobile:Bool = false;
 	public var animated = false;
 	public var animatedSprite:AnimatedSprite;
+	public var collidable:Bool = false;
 	
 	public function new() 
 	{
