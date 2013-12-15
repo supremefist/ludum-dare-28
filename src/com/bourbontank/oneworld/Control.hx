@@ -2,6 +2,7 @@ package com.bourbontank.oneworld;
 import com.bourbontank.oneworld.screen.BriefingScreen;
 import com.bourbontank.oneworld.screen.DebateScreen;
 import com.bourbontank.oneworld.screen.SplashScreen;
+import com.bourbontank.oneworld.screen.TutorialDebateScreen;
 import com.bourbontank.oneworld.screen.WorldScreen;
 import flash.display.Sprite;
 import com.bourbontank.oneworld.sprites.Continent;
@@ -24,8 +25,12 @@ class Control
 		// Intro
 		introConversation = new Array<ChatLine>();
 		introConversation.push(new ChatLine("Narrator", "You are the king of the great kingdom of Monaco!  You have ruled it honorably for many years.  Unfortunately, the scientist in Monaco has determined that the world will be uninhabitable within one year due to global warming!  This is likely to affect us negatively.  You know what they say... You only get one world!"));
-		
-		
+		introConversation.push(new ChatLine("Scientist", "Scientist: Your Majesty, I do believe it's time for Monaco to step in and save the world! We shall do it by convincing all the nations of the world to abandon their selfish carbon emmissions, continent by continent!  How hard could it be?  Your debating skills are unmatched."));
+		introConversation.push(new ChatLine("King", "You: Aye, they are unmatched, but I swore I would never use them again!  Remember what happened last time when I debated that young man..."));
+		introConversation.push(new ChatLine("Scientist", "Scientist: That was a child, your Majesty."));
+		introConversation.push(new ChatLine("King", "You: Child, who cares.  The point is that I am forced to take up debating again!  Where do we begin?"));
+		introConversation.push(new ChatLine("Scientist", "Scientist: It begins right here.  You must convince the queen that our cause is just!"));
+		introConversation.push(new ChatLine("King", "You: The horror!  She is as ruthless in love as she is in debate!"));
 	}
 	
 	public function initData() {
@@ -97,7 +102,9 @@ class Control
 	
 	public function start() {
 		//display.setScreen(new SplashScreen(display, this));
-		display.setScreen(new BriefingScreen(display, this, introConversation, new WorldScreen(display, this)));
+		//display.setScreen(new BriefingScreen(display, this, introConversation, new WorldScreen(display, this)));
+		display.setScreen(new TutorialDebateScreen(display, this));
+		//display.setScreen(new DebateScreen(display, this, 6, 3));
 		//sound.playMusic();
 	}
 	

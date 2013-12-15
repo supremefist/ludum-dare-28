@@ -59,7 +59,9 @@ class Delegate extends EntitySprite
 	
 	var resting:Bool = false;
 	
-	public function new(chamber:DebateChamber, x:Float, y:Float) 
+	var male:Bool = true;
+	
+	public function new(chamber:DebateChamber, x:Float, y:Float, random:Bool, ?hairColor:UInt=0x000000, ?tieColor:UInt=0xff0000, ?male:Bool=true) 
 	{
 		super();
 		
@@ -68,6 +70,11 @@ class Delegate extends EntitySprite
 		
 		this.chamber = chamber;
 		
+		this.hairColor = hairColor;
+		this.tieColor = tieColor;
+		this.male = male;
+		
+		
 		minX = x - 50;
 		maxX = x + 50;
 		rootY = y;
@@ -75,7 +82,7 @@ class Delegate extends EntitySprite
 		animated = true;
 		mobile = true;
 		
-		var spritesheet = getSpriteSheet();
+		var spritesheet = getSpriteSheet(random);
 		var frameRate = 10;
 		spritesheet.addBehavior(new BehaviorData("crouch", [5, 6, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 , 7 , 7 , 7 , 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 , 7 , 7 , 7 , 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7, 7 , 7 , 7 , 7 , 7], false, frameRate));
 		spritesheet.addBehavior(new BehaviorData("crouching", [7], true, frameRate));
@@ -124,7 +131,9 @@ class Delegate extends EntitySprite
 			skinColor = 0xffc39f;
 		}
 		
-		
+	}
+	
+	public function applyAppearance(bitmapData:BitmapData) {
 		// Hair
 		if (hairColor != 0x000000) {
 			Utils.replaceColor(bitmapData, 0x050505, hairColor);
@@ -144,15 +153,24 @@ class Delegate extends EntitySprite
 		}
 	}
 	
-	public function getSpriteSheet() {
+	public function getSpriteSheet(random:Bool) {
 		var bitmapFilename = "img/delegate_front.png";
-		if (Math.random() > 0.5) {
+		if (random) {
+			if (Math.random() > 0.5) {
+				male = false;
+			}
+		}
+		if (!male) {
 			bitmapFilename = "img/delegate_front_female.png";
 		}
+		
 		var bitmapData:BitmapData = Assets.getBitmapData(bitmapFilename);
 		
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
-		randomizeAppearance(bitmapData);
+		if (random) {
+			randomizeAppearance(bitmapData);
+		}
+		applyAppearance(bitmapData);
 		
 		// The height of 33 is just because they're standing behind a table!
 		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 13, 1, 32, 33);

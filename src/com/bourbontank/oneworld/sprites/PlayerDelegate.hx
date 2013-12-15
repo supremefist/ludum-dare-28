@@ -25,6 +25,8 @@ class PlayerDelegate extends FriendlyDelegate
 	var downDown = false;
 	var upDown = false;
 	var attacking = false;
+	var strafing = false;
+	var idling = true;
 	
 	public function new(chamber:DebateChamber, x:Float, y:Float) 
 	{
@@ -69,7 +71,7 @@ class PlayerDelegate extends FriendlyDelegate
 		}
 	}
 	
-	override public function getSpriteSheet() {
+	override public function getSpriteSheet(random:Bool) {
 		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_back.png");
 		
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
@@ -92,16 +94,40 @@ class PlayerDelegate extends FriendlyDelegate
 			stand();
 			
 			if (!((leftDown) && (rightDown))) {
-				if (leftDown) {
+				if ((leftDown) && (x > minX)) {
 					stand();
 					x -= delta * Delegate.MOVEMENT_SPEED_MODIFIER;
+					
+					if (!strafing) {
+						idling = false;
+						animatedSprite.showBehavior("strafing");
+						strafing = true;
+					}
 				}
-				else if (rightDown) {
+				else if ((rightDown) && (x < maxX)) {
 					stand();
 					x += delta * Delegate.MOVEMENT_SPEED_MODIFIER;
+					
+					if (!strafing) {
+						idling = false;
+						animatedSprite.showBehavior("strafing");
+						strafing = true;
+					}
+				}
+				else {
+					strafing = false;
+					if (!idling) {
+						animatedSprite.showBehavior("idling");
+						idling = true;
+					}
 				}
 			}
+			else {
+				animatedSprite.showBehavior("idling");
+				strafing = false;
+			}
 		}
+		
 		
 		if ((attacking) && (throwWait >= throwRate) && (!crouched) && (!chamber.debateDone())) {
 			
@@ -120,6 +146,7 @@ class PlayerDelegate extends FriendlyDelegate
 	}
 	
 	override public function crouch() {
+		strafing = false;
 		if (!crouched) {
 			animatedSprite.showBehavior("crouching");
 			crouched = true;

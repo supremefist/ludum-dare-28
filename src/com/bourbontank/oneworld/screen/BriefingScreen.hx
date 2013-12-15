@@ -1,6 +1,7 @@
 package com.bourbontank.oneworld.screen;
 import com.bourbontank.oneworld.Control;
 import com.bourbontank.oneworld.Display;
+import com.bourbontank.oneworld.sprites.BriefSprite;
 import com.bourbontank.oneworld.sprites.NarrateSprite;
 import com.bourbontank.oneworld.sprites.SpeakerSprite;
 import com.bourbontank.oneworld.Utils;
@@ -34,13 +35,6 @@ class BriefingScreen extends BaseClickingScreen
 	private var fader:Sprite;
 	private var lastTime:Int;
 	
-	private var conversation:Array<ChatLine> = null;
-	private var afterConversationScreen:Screen;
-	
-	private var narrateSprite:NarrateSprite;
-	private var leftSpeakerBox:SpeakerSprite;
-	private var rightSpeakerBox:SpeakerSprite;
-	
 	public function new(display:Display, control:Control, conversation:Array<ChatLine>, afterConversationScreen:Screen)
 	{
 		super(display, control);
@@ -52,13 +46,21 @@ class BriefingScreen extends BaseClickingScreen
 		addBackground();
 		
 		narrateSprite = new NarrateSprite();
-		narrateSprite.visible = false;
 		narrateSprite.x = 250;
 		narrateSprite.y = 30;
 		addChild(narrateSprite);
 		
-		leftSpeakerBox = new SpeakerSprite();
-		rightSpeakerBox = new SpeakerSprite();
+		leftSpeakerBox = new SpeakerSprite(40, -30);
+		leftSpeakerBox.alpha = 0.0;
+		leftSpeakerBox.x = 50;
+		leftSpeakerBox.y = 250;
+		addChild(leftSpeakerBox);
+		
+		rightSpeakerBox = new SpeakerSprite(0, 310);
+		rightSpeakerBox.alpha = 0.0;
+		rightSpeakerBox.x = 405;
+		rightSpeakerBox.y = 250;
+		addChild(rightSpeakerBox);
 		
 		fader = new Sprite();
 		fader.graphics.beginFill(0x000000, 1.0);
@@ -94,38 +96,10 @@ class BriefingScreen extends BaseClickingScreen
 	
 	public function onEnterFrame(e:Event):Void {
 		var delta = Lib.getTimer() - lastTime;
-		//if (globe != null) {
-		//	globe.update(delta);
-		//}
-		
-		//updateBorder(delta);
+		leftSpeakerBox.animate(delta);
+		rightSpeakerBox.animate(delta);
 		lastTime = Lib.getTimer();
 		
-	}
-	
-	public function narrate(line:String) {
-		narrateSprite.visible = true;
-		leftSpeakerBox.visible = false;
-		rightSpeakerBox.visible = false;
-		narrateSprite.setText(line);
-	}
-	
-	public function showLine(line:ChatLine) {
-		if (line.speakerName == "Narrator") {
-			narrate(line.line);
-		}
-	}
-	
-	public function continueConversation() {
-		if ((conversation != null) && (conversation.length > 0)) {
-			var nextLine:ChatLine = conversation[0];
-			conversation.remove(nextLine);
-			
-			showLine(nextLine);
-		}
-		else {
-			display.setScreen(afterConversationScreen);
-		}
 	}
 	
 	dynamic public function clicked(e:MouseEvent) {

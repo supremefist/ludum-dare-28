@@ -32,19 +32,16 @@ import flash.Lib;
 class DebateScreen extends BaseTargetingScreen
 {
 
-	var chamber:EntityContainerSprite;
+	var chamber:DebateChamber;
 	private var lastTime:Int;
 	
-		
-		
-	
-	public function new(display:Display, control:Control) 
+	public function new(display:Display, control:Control, enemyDelegates:Int, friendlyDelegates:Int) 
 	{
 		super(display, control);
 		
 		lastTime = Lib.getTimer();
 		
-		chamber = new DebateChamber(this);
+		chamber = new DebateChamber(this, enemyDelegates, friendlyDelegates);
 		addChild(chamber);
 		
 		addCursor();

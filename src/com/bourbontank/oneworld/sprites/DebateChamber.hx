@@ -31,7 +31,7 @@ class DebateChamber extends EntityContainerSprite
 	
 	public var completed:Bool = false;
 	
-	public function new(screen:DebateScreen) 
+	public function new(screen:DebateScreen, enemyDelegateCount:Int, friendlyDelegateCount:Int) 
 	{
 		super();
 		this.screen = screen;
@@ -44,28 +44,33 @@ class DebateChamber extends EntityContainerSprite
 		
 		addBackground();
 		
-		addEnemyDelegates(6);
+		addEnemyDelegates(enemyDelegateCount);
 		
-		addFriendlyDelegates(3);
+		addFriendlyDelegates(friendlyDelegateCount);
 	}
+	
+	public function addEnemyDelegate(index:Int, random:Bool=true, ?hairColor:UInt=0xffff7d, ?tieColor:UInt=0xff0000, ?male:Bool=false) {
+		var xLocationIndex = index % 3;
+		var yLocationIndex = Math.ceil((index + 1) / 3.0) - 1;
+		var xLocation = enemyDelegateXLocations[xLocationIndex];
+		var yLocation = enemyDelegateYLocations[yLocationIndex];
+		
+		var table = new MeetingTable();
+		table.x = xLocation;
+		table.y = yLocation + 33;
+		
+		var delegate = new Delegate(this, xLocation + (table.width - 32) / 2, yLocation, random, hairColor, tieColor, male);
+		
+		addDelegate(delegate);
+		addTable(table);
+		
+		enemyDelegates.push(delegate);
+	}
+
 	
 	public function addEnemyDelegates(count:Int) {
 		for (i in 0...count) {
-			var xLocationIndex = i % 3;
-			var yLocationIndex = Math.ceil((i + 1) / 3.0) - 1;
-			var xLocation = enemyDelegateXLocations[xLocationIndex];
-			var yLocation = enemyDelegateYLocations[yLocationIndex];
-			
-			var table = new MeetingTable();
-			table.x = xLocation;
-			table.y = yLocation + 33;
-			
-			var delegate = new Delegate(this, xLocation + (table.width - 32) / 2, yLocation);
-			
-			addDelegate(delegate);
-			addTable(table);
-			
-			enemyDelegates.push(delegate);
+			addEnemyDelegate(i);
 		}
 		
 	}

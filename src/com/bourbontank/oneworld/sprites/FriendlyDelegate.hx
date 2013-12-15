@@ -18,11 +18,11 @@ class FriendlyDelegate extends Delegate
 
 	public function new(chamber:DebateChamber, x:Float, y:Float) 
 	{
-		super(chamber, x, y);
+		super(chamber, x, y, true);
 		friendly = true;
 	}
 	
-	override public function getSpriteSheet() {
+	override public function getSpriteSheet(random:Bool) {
 		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_back.png");
 		
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);

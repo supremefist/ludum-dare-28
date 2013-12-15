@@ -12,7 +12,6 @@ class NarrateSprite extends BriefSprite
 {
 
 	var background:TextBackgroundSprite;
-	var textField:TextField;
 	
 	public function new() 
 	{
