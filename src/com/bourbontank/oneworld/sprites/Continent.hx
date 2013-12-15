@@ -12,6 +12,8 @@ import com.bourbontank.oneworld.Utils;
 import com.bourbontank.oneworld.Main;
 import openfl.Assets;
 
+import com.bourbontank.oneworld.ChatLine;
+
 /**
  * ...
  * @author ...
@@ -31,6 +33,9 @@ class Continent extends Sprite
 	public var continentName:String = "";
 	public var difficulty:Int = 0;
 	public var specialty:Int = 0;
+	
+	public var victoryConversation:Array<ChatLine> = null;
+	public var defeatConversation:Array<ChatLine> = null;
 	
 	public function new(display:Display, control:Control, continentName:String, bitmapString:String) 
 	{
@@ -92,6 +97,13 @@ class Continent extends Sprite
 				addChild(currentBitmap);
 			}
 		}
+	}
+	
+	public function getVictoryConversation():Array<ChatLine> {
+		return victoryConversation;
+	}
+	public function getDefeatConversation():Array<ChatLine> {
+		return defeatConversation;
 	}
 	
 }

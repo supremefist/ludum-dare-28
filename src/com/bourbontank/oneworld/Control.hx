@@ -22,6 +22,8 @@ class Control
 	
 	public var continents:Array<Continent>;
 	
+	public var friendlyDelegates:Int = 0;
+	
 	public function buildConversations() {
 		// Intro
 		introConversation = new Array<ChatLine>();
@@ -85,6 +87,10 @@ class Control
 		continent.x = worldStartX + 608;
 		continent.y = worldStartY + 305;
 		continents.push(continent);
+		
+		for (i in 0...continents.length - 1) {
+			continents[i].setFriendly(true);
+		}
 	}
 	
 	public function worldPhase() {
@@ -96,18 +102,6 @@ class Control
 		
 		display.setScreen(screen);
 		
-		
-		
-		var done:Bool = true;
-		for (continent in continents) {
-			if (!continent.friendly) {
-				done = false;
-			}
-		}
-		
-		if (done) {
-			// Game finished!
-		}
 	}
 	
 	public function new(?rootSprite:Sprite) 

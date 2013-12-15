@@ -1,4 +1,5 @@
 package com.bourbontank.oneworld.screen;
+import com.bourbontank.oneworld.ChatLine;
 import com.bourbontank.oneworld.Control;
 import com.bourbontank.oneworld.Display;
 import com.bourbontank.oneworld.sprites.Continent;
@@ -42,7 +43,7 @@ class WorldScreen extends BaseClickingScreen
 	private var detailBoxFading:Bool = false;
 	
 	private var startText:TextField;
-	
+	private var done:Bool = false;
 	
 	public function new(display:Display, control:Control) 
 	{
@@ -67,6 +68,21 @@ class WorldScreen extends BaseClickingScreen
 	override public function start() {
 		Actuate.tween (fader, 3.0, { alpha: 0 } ).onComplete(removeChild, [fader]);
 		addEventListener (Event.ENTER_FRAME, onEnterFrame);
+		
+		done = true;
+		for (continent in control.continents) {
+			if (!continent.friendly) {
+				done = false;
+			}
+		}
+		
+		if (done) {
+			// Game finished!
+			conversation = [new ChatLine("Scientist", "By the beard of Prince Albert the Second!  You have convinced all the nations in the world to recognise global warming!  The earth is saved!  Carbon emissions have reduced by more than 1%!  All thanks to the vast and famous nation of Monaco!")];
+			instructionBox.alpha = 0;
+			detailBox.alpha = 0;
+			conversing = true;
+		}
 		
 		if ((conversation != null) && (conversation.length > 0)) {
 			continueConversation();
@@ -135,7 +151,7 @@ class WorldScreen extends BaseClickingScreen
 		}
 	}
 	
-	public function onEnterFrame(e:Event):Void {
+	override public function onEnterFrame(e:Event):Void {
 		var delta = Lib.getTimer() - lastTime;
 		
 		if (conversing) {
@@ -157,7 +173,14 @@ class WorldScreen extends BaseClickingScreen
 	dynamic public function targetClicked(e:MouseEvent) {
 		for (continent in control.continents) {
 			if (continent.highlighted) {
-				continent.setFriendly(true);
+				if (!continent.friendly) {
+					// To battle!
+					var debateScreen:DebateScreen = new DebateScreen(display, control, continent.difficulty * 2 + 2, 1 + control.friendlyDelegates);
+					debateScreen.continent = continent;
+					
+					display.setScreen(debateScreen);
+					removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				}
 			}
 		}
 		
@@ -165,7 +188,10 @@ class WorldScreen extends BaseClickingScreen
 	}
 	
 	dynamic public function clicked(e:MouseEvent) {
-		if (conversing) {
+		if (done) {
+			
+		}
+		else if (conversing) {
 			if ((conversation != null) && (conversation.length > 0)) {
 				continueConversation();
 			}

@@ -136,7 +136,7 @@ class SplashScreen extends BaseClickingScreen
 		addChild(space);
 	}
 	
-	public function onEnterFrame(e:Event):Void {
+	override public function onEnterFrame(e:Event):Void {
 		var delta = Lib.getTimer() - lastTime;
 		if (globe != null) {
 			globe.update(delta);

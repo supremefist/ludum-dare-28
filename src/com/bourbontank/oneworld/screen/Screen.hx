@@ -7,6 +7,7 @@ import com.bourbontank.oneworld.sprites.SpeakerSprite;
 import com.bourbontank.oneworld.sprites.TargetCursor;
 import com.bourbontank.oneworld.Main;
 import flash.display.Sprite;
+import flash.events.Event;
 import motion.Actuate;
 import com.bourbontank.oneworld.ChatLine;
 
@@ -61,6 +62,10 @@ class Screen extends Sprite
 		rightSpeakerBox.x = 405;
 		rightSpeakerBox.y = 250;
 		addChild(rightSpeakerBox);
+	}
+	
+	public function onEnterFrame(e:Event):Void {
+	
 	}
 	
 	public function start() {
