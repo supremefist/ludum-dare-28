@@ -28,11 +28,14 @@ class PlayerDelegate extends FriendlyDelegate
 	var strafing = false;
 	var idling = true;
 	
+	private var standingTime:Int = 0;
+	
 	public function new(chamber:DebateChamber, x:Float, y:Float) 
 	{
 		super(chamber, x, y);
 		
 		morale = 100;
+		projectileDamage = 20;
 		
 		Lib.current.stage.addEventListener (KeyboardEvent.KEY_DOWN, keyDown);
 		Lib.current.stage.addEventListener (KeyboardEvent.KEY_UP, keyUp);
@@ -91,6 +94,7 @@ class PlayerDelegate extends FriendlyDelegate
 			crouch();
 		}
 		else if (!downDown) {
+			standingTime += delta;
 			stand();
 			
 			if (!((leftDown) && (rightDown))) {
@@ -129,7 +133,7 @@ class PlayerDelegate extends FriendlyDelegate
 		}
 		
 		
-		if ((attacking) && (throwWait >= throwRate) && (!crouched) && (!chamber.debateDone())) {
+		if (((attacking) && (throwWait >= throwRate) && (!crouched) && (!chamber.debateDone())) && (standingTime > 300)) {
 			
 			// Time to throw!
 			throwProjectile(chamber.screen.cursor.x, chamber.screen.cursor.y);
@@ -139,14 +143,13 @@ class PlayerDelegate extends FriendlyDelegate
 	}
 	
 	override public function createProjectile():Projectile {
-		var projectile:Projectile = new Projectile();
+		var projectile:Projectile = new Projectile(projectileDamage + chamber.screen.control.playerPotencyBonus);
 		projectile.friendly = true;
-		projectile.speed = projectile.baseSpeed;
-		projectile.potency += chamber.screen.control.playerPotencyBonus;
 		return projectile;
 	}
 	
 	override public function crouch() {
+		standingTime = 0;
 		strafing = false;
 		if (!crouched) {
 			animatedSprite.showBehavior("crouching");

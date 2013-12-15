@@ -77,6 +77,16 @@ class SplashScreen extends BaseClickingScreen
 		textField.height = 400;
 		text.addChild(textField);
 		
+		textField = Utils.createTextSprite("@supreme_fist", 0xffffff, 12);
+		textField.x = 700;
+		textField.y = 0;
+		text.addChild(textField);
+		
+		var bitmap:Bitmap = new Bitmap(Utils.resizeBitmapData(Assets.getBitmapData ("img/twitter.png"), 16, 16));
+		bitmap.x = 680;
+		bitmap.y = 5;
+		text.addChild(bitmap);
+		
 		slideText = Utils.createTextSprite("You only get one...", 0xFF4F63, 40);
 		slideText.x = -500;
 		slideText.y = 100;
@@ -165,6 +175,9 @@ class SplashScreen extends BaseClickingScreen
 	}
 	
 	dynamic public function clicked(e:MouseEvent) {
-		control.worldPhase();
+		var nextScreen:Screen = new BriefingScreen(display, control);
+		removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+		display.setScreen(nextScreen);
+		//control.worldPhase();
 	}
 }

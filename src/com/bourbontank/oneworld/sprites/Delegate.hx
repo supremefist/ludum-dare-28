@@ -22,10 +22,11 @@ class Delegate extends EntitySprite
 {
 	public static var MOVEMENT_SPEED_MODIFIER:Float = 0.1;
 	
-	var morale:Int = 0;
+	public var morale:Int = 60;
+	public var projectileDamage:Int = 20;
 	
 	var throwWait:Int = 0;
-	var baseThrowRate:Int = 2000;
+	public var baseThrowRate:Int = 2000;
 	var baseThrowVariance:Int = 1000;
 	var throwRate:Float;
 	var throwError:Float = 60;
@@ -73,7 +74,6 @@ class Delegate extends EntitySprite
 		this.hairColor = hairColor;
 		this.tieColor = tieColor;
 		this.male = male;
-		
 		
 		minX = x - 50;
 		maxX = x + 50;
@@ -155,11 +155,14 @@ class Delegate extends EntitySprite
 	
 	public function getSpriteSheet(random:Bool) {
 		var bitmapFilename = "img/delegate_front.png";
+		
 		if (random) {
+			
 			if (Math.random() > 0.5) {
 				male = false;
 			}
 		}
+		
 		if (!male) {
 			bitmapFilename = "img/delegate_front_female.png";
 		}
@@ -212,7 +215,7 @@ class Delegate extends EntitySprite
 	}
 	
 	public function createProjectile():Projectile {
-		var projectile:Projectile = new Projectile();
+		var projectile:Projectile = new Projectile(projectileDamage);
 		projectile.friendly = false;
 		projectile.generateSpeed();
 		return projectile;

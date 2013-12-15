@@ -5,6 +5,7 @@ import com.bourbontank.oneworld.sprites.Continent;
 import com.bourbontank.oneworld.sprites.DebateChamber;
 import com.bourbontank.oneworld.sprites.Delegate;
 import com.bourbontank.oneworld.sprites.EntityContainerSprite;
+import com.bourbontank.oneworld.sprites.MoraleSprite;
 import com.bourbontank.oneworld.sprites.RewardSelection;
 import com.bourbontank.oneworld.sprites.TargetCursor;
 import com.bourbontank.oneworld.Utils;
@@ -40,6 +41,8 @@ class DebateScreen extends BaseTargetingScreen
 	var chamber:DebateChamber;
 	private var lastTime:Int;
 	
+	private var moraleSprite:MoraleSprite;
+	
 	var finished:Bool = false;
 	var finishedTimer:Int = 0;
 	
@@ -62,14 +65,13 @@ class DebateScreen extends BaseTargetingScreen
 		
 		lastTime = Lib.getTimer();
 		
-		
-		var enemyDelegates:Int = 1;
+		var enemyDelegates:Int = 0;
 		if (continent != null) {
 			enemyDelegates = continent.difficulty * 2 + 2;
 		}
 		var friendlyDelegates:Int = 1 + control.friendlyDelegates;
 		
-		chamber = new DebateChamber(this, enemyDelegates, friendlyDelegates);
+		chamber = new DebateChamber(this, enemyDelegates, continent, friendlyDelegates);
 		addChild(chamber);
 		
 		messageBox = Utils.createTextSprite("", 0xffffff, 40);
@@ -85,6 +87,11 @@ class DebateScreen extends BaseTargetingScreen
 		selectRewardSprite.y = 170;
 		selectRewardSprite.alpha = 0;
 		addChild(selectRewardSprite);
+		
+		moraleSprite = new MoraleSprite(50, chamber.friendlyDelegates[0]);
+		moraleSprite.x = 740;
+		moraleSprite.y = 450;
+		addChild(moraleSprite);
 		
 		addCursor();
 		
@@ -102,6 +109,8 @@ class DebateScreen extends BaseTargetingScreen
 	
 	override public function onEnterFrame(e:Event):Void {
 		var delta = Lib.getTimer() - lastTime;
+		
+		moraleSprite.update();
 		
 		if (!selectingReward) {
 			chamber.updateEntities(delta);

@@ -43,6 +43,8 @@ class Continent extends Sprite
 		
 		this.continentName = continentName;
 		
+		defeatConversation = [new ChatLine("Scientist", "Good try, my liege.  There is always next time!")];
+		
 		var friendlyBitmapData = Assets.getBitmapData (bitmapString);
 		friendlyBitmapData = Utils.resizeBitmapData(friendlyBitmapData, friendlyBitmapData.width * 2, friendlyBitmapData.height * 2);
 		friendlyBitmap = new Bitmap(friendlyBitmapData);

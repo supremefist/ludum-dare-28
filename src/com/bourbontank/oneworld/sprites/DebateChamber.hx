@@ -30,10 +30,14 @@ class DebateChamber extends EntityContainerSprite
 	public var enemyProjectiles:Array<Projectile>;
 	
 	public var completed:Bool = false;
+	public var continent:Continent;
 	
-	public function new(screen:DebateScreen, enemyDelegateCount:Int, friendlyDelegateCount:Int) 
+	public function new(screen:DebateScreen, enemyDelegateCount:Int, continent:Continent, friendlyDelegateCount:Int) 
 	{
 		super();
+		
+		this.continent = continent;
+		
 		this.screen = screen;
 		
 		friendlyDelegates = new Array<FriendlyDelegate>();
@@ -49,7 +53,7 @@ class DebateChamber extends EntityContainerSprite
 		addFriendlyDelegates(friendlyDelegateCount);
 	}
 	
-	public function addEnemyDelegate(index:Int, random:Bool=true, ?hairColor:UInt=0xffff7d, ?tieColor:UInt=0xff0000, ?male:Bool=false) {
+	public function addEnemyDelegate(index:Int, specialty:Int, random:Bool=true, ?hairColor:UInt=0xffff7d, ?tieColor:UInt=0xff0000, ?male:Bool=true) {
 		var xLocationIndex = index % 3;
 		var yLocationIndex = Math.ceil((index + 1) / 3.0) - 1;
 		var xLocation = enemyDelegateXLocations[xLocationIndex];
@@ -60,6 +64,19 @@ class DebateChamber extends EntityContainerSprite
 		table.y = yLocation + 33;
 		
 		var delegate = new Delegate(this, xLocation + (table.width - 32) / 2, yLocation, random, hairColor, tieColor, male);
+		if (specialty == 0) {
+			// Morale
+			delegate.morale += 20;
+		}
+		else if (specialty == 1) {
+			// Attack speed
+			delegate.baseThrowRate = Math.round(delegate.baseThrowRate * 0.75);
+		}
+		else if (specialty == 2) {
+			// Damage
+			delegate.projectileDamage += 20;
+			
+		}
 		
 		addDelegate(delegate);
 		addTable(table);
@@ -70,7 +87,12 @@ class DebateChamber extends EntityContainerSprite
 	
 	public function addEnemyDelegates(count:Int) {
 		for (i in 0...count) {
-			addEnemyDelegate(i);
+			if (continent != null) {
+				addEnemyDelegate(i, continent.specialty);
+			}
+			else {
+				addEnemyDelegate(i, 0);
+			}
 		}
 		
 	}

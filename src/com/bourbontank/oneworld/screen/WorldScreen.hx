@@ -78,7 +78,7 @@ class WorldScreen extends BaseClickingScreen
 		
 		if (done) {
 			// Game finished!
-			conversation = [new ChatLine("Scientist", "By the beard of Prince Albert the Second!  You have convinced all the nations in the world to recognise global warming!  The earth is saved!  Carbon emissions have reduced by more than 1%!  All thanks to the vast and famous nation of Monaco!")];
+			conversation = [new ChatLine("Scientist", "By the beard of Prince Albert the Second!  You have convinced all the nations in the world to recognise global warming!  The earth is saved!  Carbon emissions have reduced by more than 1%!  All thanks to the vast and famous nation of Monaco!\nWell done!")];
 			instructionBox.alpha = 0;
 			detailBox.alpha = 0;
 			conversing = true;

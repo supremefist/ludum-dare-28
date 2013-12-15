@@ -47,7 +47,7 @@ class TutorialDebateScreen extends DebateScreen
 		conversation.push(new ChatLine("King", "You: Well, my queen, as you may have heard, our vast kingdom is under threat of destruction by..."));
 		conversation.push(new ChatLine("Queen", "Queen: Silence!  We shall debate this in the modern way: honorable battle of crumpled-up paper!  Prepare to be annihilated!"));
 		conversation.push(new ChatLine("King", "King: Very well.  I am nothing if not adaptable to change!"));
-		conversation.push(new ChatLine("Narrator", "Debate using the following keys:\nS or down: crouch\nA or left: strafe left\nD or right: strafe right\nYour current morale is visible in the lower right corner.  Once this is depleted, you have lost the debate!  Outwit all your opponents to win the debate!"));
+		conversation.push(new ChatLine("Narrator", "Debate using the following keys:\nS or down: crouch\nA or left: strafe left\nD or right: strafe right\nThrow with mouse.  Your current morale is visible in the lower right corner.  Once this is depleted, you have lost the debate!  Outwit all your opponents to win the debate!"));
 		
 		
 		narrateSprite = new NarrateSprite();
@@ -76,6 +76,8 @@ class TutorialDebateScreen extends DebateScreen
 	override public function onEnterFrame(e:Event):Void {
 		var delta = Lib.getTimer() - lastTime;
 		
+		moraleSprite.update();
+		
 		if (!conversing) {
 			chamber.updateEntities(delta);
 		}
@@ -90,10 +92,26 @@ class TutorialDebateScreen extends DebateScreen
 				battled = false;
 				conversing = true;
 				epilogue = true;
-				// Tutorial completed!
-				conversation = new Array<ChatLine>();
-				conversation.push(new ChatLine("Queen", "Queen: Perhaps there is a chance for the earth after all.  Your debating skills are indeed advanced!"));
-				conversation.push(new ChatLine("King", "You: I was just about to say the same thing!"));
+				
+				victory = false;
+				if (chamber.friendlyDelegates[0].isAlive()) {
+					victory = true;
+				}
+				
+				if (victory) {
+					// Victory!
+					// Tutorial completed!
+					conversation = new Array<ChatLine>();
+					conversation.push(new ChatLine("Queen", "Queen: Perhaps there is a chance for the earth after all.  Your debating skills are indeed advanced!"));
+					conversation.push(new ChatLine("King", "You: I was just about to say the same thing!"));
+				}
+				else {
+					// Lost the tutorial...
+					conversation = new Array<ChatLine>();
+					conversation.push(new ChatLine("Queen", "Queen: Pathetic!  This is what happens when you challenge the master of this castle!  Return to your room at once!"));
+					conversation.push(new ChatLine("King", "You: Yes, my mistress..."));
+				}
+				
 				
 				continueConversation();
 			}
@@ -115,7 +133,7 @@ class TutorialDebateScreen extends DebateScreen
 				}
 				
 				chamber.addFriendlyDelegates(1);
-				chamber.addEnemyDelegate(0, false);
+				chamber.addEnemyDelegate(0, -1, false, 0xffff7d, 0xff0000, false);
 				
 				conversing = false;
 				battled = true;
@@ -126,8 +144,15 @@ class TutorialDebateScreen extends DebateScreen
 				continueConversation();
 			}
 			else {
-				control.worldPhase();
+				removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+				if (victory) {
+					control.worldPhase();
+				}
+				else {
+					control.restart();
+				}
 			}
+			
 		}
 		
 	}

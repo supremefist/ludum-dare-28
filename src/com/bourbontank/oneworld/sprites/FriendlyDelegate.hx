@@ -47,7 +47,7 @@ class FriendlyDelegate extends Delegate
 	}
 	
 	override public function createProjectile():Projectile {
-		var projectile:Projectile = new Projectile();
+		var projectile:Projectile = new Projectile(projectileDamage);
 		projectile.friendly = true;
 		projectile.generateSpeed();
 		return projectile;

@@ -18,7 +18,7 @@ class Control
 	var sound:GameSound;
 	private var worldStartX:Int = 0;
 	private var worldStartY:Int = 0;
-	private var introConversation:Array<ChatLine>;
+	public var introConversation:Array<ChatLine>;
 	
 	public var continents:Array<Continent>;
 	
@@ -31,7 +31,7 @@ class Control
 		// Intro
 		introConversation = new Array<ChatLine>();
 		introConversation.push(new ChatLine("Narrator", "You are the king of the great kingdom of Monaco!  You have ruled it honorably for many years.  Unfortunately, the scientist in Monaco has determined that the world will be uninhabitable within one year due to global warming!  This is likely to affect us negatively.  You know what they say... You only get one world!"));
-		introConversation.push(new ChatLine("Scientist", "Scientist: Your Majesty, I do believe it's time for Monaco to step in and save the world! We shall do it by convincing all the nations of the world to abandon their selfish carbon emmissions, continent by continent!  How hard could it be?  Your debating skills are unmatched."));
+		introConversation.push(new ChatLine("Scientist", "Scientist: Your Majesty, I do believe it's time for Monaco to step in and save the world! We shall do it by convincing all the nations of the world to abandon their selfish carbon emissions, continent by continent!  How hard could it be?  Your debating skills are unmatched."));
 		introConversation.push(new ChatLine("King", "You: Aye, they are unmatched, but I swore I would never use them again!  Remember what happened last time when I debated that young man..."));
 		introConversation.push(new ChatLine("Scientist", "Scientist: That was a child, your Majesty."));
 		introConversation.push(new ChatLine("King", "You: Child, who cares.  The point is that I am forced to take up debating again!  Where do we begin?"));
@@ -62,6 +62,8 @@ class Control
 		var continent;
 		
 		continent = new Continent(display, this, "North America", "img/continents/north_america.png");
+		continent.victoryConversation = [new ChatLine("Scientist", "Excellent debating, sire!  The americans never saw it coming!")];
+		
 		continent.specialty = 2; // Argument potency
 		continent.difficulty = 2;
 		continent.x = worldStartX;
@@ -69,6 +71,7 @@ class Control
 		continents.push(continent);
 		
 		continent = new Continent(display, this, "South America", "img/continents/south_america.png");
+		continent.victoryConversation = [new ChatLine("Scientist", "They're good at football, but they are no match for your debating skills, my liege!")];
 		continent.specialty = 0; // Strong morale
 		continent.difficulty = 0;
 		continent.x = worldStartX + 180;
@@ -76,6 +79,7 @@ class Control
 		continents.push(continent);
 		
 		continent = new Continent(display, this, "Europe", "img/continents/europe.png");
+		continent.victoryConversation = [new ChatLine("Scientist", "With the help of all these first world countries, noone can stop us, sire!")];
 		continent.specialty = 1; // Quickness of wit
 		continent.difficulty = 2;
 		continent.x = worldStartX + 320;
@@ -83,6 +87,7 @@ class Control
 		continents.push(continent);
 		
 		continent = new Continent(display, this, "Africa", "img/continents/africa.png");
+		continent.victoryConversation = [new ChatLine("Scientist", "Against all odds, your debating skills are increasing even further, your Majesty!")];
 		continent.specialty = 0; // Strong morale
 		continent.difficulty = 0;
 		continent.x = worldStartX + 330;
@@ -90,6 +95,7 @@ class Control
 		continents.push(continent);
 		
 		continent = new Continent(display, this, "Asia", "img/continents/asia.png");
+		continent.victoryConversation = [new ChatLine("Scientist", "More great nations now support us, sire!")];
 		continent.specialty = 1; // Quickness of wit
 		continent.difficulty = 1;
 		continent.x = worldStartX + 423;
@@ -97,18 +103,12 @@ class Control
 		continents.push(continent);
 		
 		continent = new Continent(display, this, "Australia", "img/continents/australia.png");
+		continent.victoryConversation = [new ChatLine("Scientist", "Throw some shrimp on the barby, yourself!")];
 		continent.specialty = 2; // Argument potency
 		continent.difficulty = 1;
 		continent.x = worldStartX + 608;
 		continent.y = worldStartY + 305;
 		continents.push(continent);
-		
-		for (i in 0...continents.length) {
-			continents[i].setFriendly(true);
-		}
-		
-		continents[0].setFriendly(false);
-		continents[5].setFriendly(false);
 	}
 	
 	public function worldPhase() {
@@ -136,8 +136,10 @@ class Control
 		//display.setScreen(new SplashScreen(display, this));
 		//display.setScreen(new BriefingScreen(display, this, introConversation, new WorldScreen(display, this)));
 		//display.setScreen(new TutorialDebateScreen(display, this));
-		display.setScreen(new DebateScreen(display, this, null));
+		//display.setScreen(new DebateScreen(display, this, null));
 		//sound.playMusic();
+		
+		restart();
 		
 		//worldPhase();
 	}

@@ -28,9 +28,11 @@ class Projectile extends EntitySprite
 	
 	public var friendly:Bool = false;
 	
-	public function new() 
+	public function new(potency:Int) 
 	{
 		super();
+		
+		this.potency = potency;
 		
 		baseSpeed = PROJECTILE_SPEED_MODIFIER;
 		

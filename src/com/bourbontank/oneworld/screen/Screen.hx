@@ -48,7 +48,7 @@ class Screen extends Sprite
 		narrateSprite = new NarrateSprite();
 		narrateSprite.alpha = 0.0;
 		narrateSprite.x = 250;
-		narrateSprite.y = 30;
+		narrateSprite.y = 150;
 		addChild(narrateSprite);
 		
 		leftSpeakerBox = new SpeakerSprite(40, -30);
@@ -73,10 +73,12 @@ class Screen extends Sprite
 	}
 	
 	public function showSprite(sprite:BriefSprite) {
+		Actuate.apply(sprite, { alpha: 0.0 } );
 		Actuate.tween(sprite, 0.2, { alpha:1.0 } );
 	}
 	
 	public function hideSprite(sprite:BriefSprite) {
+		Actuate.apply(sprite, { alpha: 1.0 } );
 		Actuate.tween(sprite, 0.2, { alpha:0.0 } );
 	}
 	
@@ -108,17 +110,19 @@ class Screen extends Sprite
 	}
 	
 	public function showLine(line:ChatLine) {
-		if (line.speakerName == "Narrator") {
-			narrate(line.line);
-		}
-		else if (line.speakerName == "Scientist") {
-			speak(leftSpeakerBox, "img/scientist.png", line.line);
-		}
-		else if (line.speakerName == "King") {
-			speak(rightSpeakerBox, "img/king.png", line.line);
-		}
-		else if (line.speakerName == "Queen") {
-			speak(leftSpeakerBox, "img/queen.png", line.line);
+		if (line != null) {
+			if (line.speakerName == "Narrator") {
+				narrate(line.line);
+			}
+			else if (line.speakerName == "Scientist") {
+				speak(leftSpeakerBox, "img/scientist.png", line.line);
+			}
+			else if (line.speakerName == "King") {
+				speak(rightSpeakerBox, "img/king.png", line.line);
+			}
+			else if (line.speakerName == "Queen") {
+				speak(leftSpeakerBox, "img/queen.png", line.line);
+			}
 		}
 	}
 	

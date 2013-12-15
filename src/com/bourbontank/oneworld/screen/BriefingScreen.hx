@@ -35,13 +35,12 @@ class BriefingScreen extends BaseClickingScreen
 	private var fader:Sprite;
 	private var lastTime:Int;
 	
-	public function new(display:Display, control:Control, conversation:Array<ChatLine>)
+	public function new(display:Display, control:Control)
 	{
 		super(display, control);
 		
 		var font:Font = Utils.getFont();
-		this.conversation = conversation;
-		
+		this.conversation = control.introConversation;
 		addBackground();
 		
 		addConversationBoxes();
@@ -87,6 +86,13 @@ class BriefingScreen extends BaseClickingScreen
 	}
 	
 	dynamic public function clicked(e:MouseEvent) {
-		continueConversation();
+		if ((conversation != null) && (conversation.length > 0)) {
+			continueConversation();
+		}
+		else {
+			var screen:Screen = new TutorialDebateScreen(display, control);
+			removeEventListener(Event.ENTER_FRAME, onEnterFrame);
+			display.setScreen(screen);
+		}
 	}
 }
