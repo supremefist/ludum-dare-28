@@ -15,7 +15,7 @@ class Control
 {
 
 	var display:Display;
-	var sound:GameSound;
+	public var sound:GameSound;
 	private var worldStartX:Int = 0;
 	private var worldStartY:Int = 0;
 	public var introConversation:Array<ChatLine>;
@@ -52,6 +52,8 @@ class Control
 		playerThrowRateBonus = 0;
 		
 		initData();
+		
+		sound.playEarthMusic();
 		
 		var screen:Screen = new SplashScreen(display, this);
 		display.setScreen(screen);
@@ -114,7 +116,7 @@ class Control
 	public function worldPhase() {
 		var screen:Screen = new WorldScreen(display, this);
 		screen.conversation = [];
-		screen.conversation.push(new ChatLine("Scientist", "Scientist: Now that the queen is on our side, she is allowing is to leave the castle!  We can debate the rulers of any continent we like!  Select the continent we will debate next."));
+		screen.conversation.push(new ChatLine("Scientist", "Scientist: Now that the queen is on our side, she is allowing is to leave the castle, again!  We can debate the rulers of any continent we like!  Select the continent we will debate next."));
 		screen.conversation.push(new ChatLine("Scientist", "Scientist: The continents marked in red are not convinced that global warming is real, yet.  We have to convince them all!"));
 		screen.conversing = true;
 		

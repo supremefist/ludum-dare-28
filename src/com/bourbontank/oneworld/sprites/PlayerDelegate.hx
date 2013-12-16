@@ -78,7 +78,10 @@ class PlayerDelegate extends FriendlyDelegate
 		var bitmapData:BitmapData = Assets.getBitmapData("img/delegate_back.png");
 		
 		bitmapData = Utils.resizeBitmapData(bitmapData, bitmapData.width * 2, bitmapData.height * 2);
+		// Clothes
 		Utils.replaceColor(bitmapData, 0x000000, 0xff0000);
+		// Hair
+		Utils.replaceColor(bitmapData, 0x050505, 0x6e3700);
 		
 		var spritesheet:Spritesheet = BitmapImporter.create(bitmapData, 13, 1, 32, 64);
 	

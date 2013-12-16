@@ -102,7 +102,7 @@ class TutorialDebateScreen extends DebateScreen
 					// Victory!
 					// Tutorial completed!
 					conversation = new Array<ChatLine>();
-					conversation.push(new ChatLine("Queen", "Queen: Perhaps there is a chance for the earth after all.  Your debating skills are indeed advanced!"));
+					conversation.push(new ChatLine("Queen", "Queen: Perhaps there is a chance for the earth after all.  Your debating skills are indeed advanced!  Remember: you can hold down the mouse button to attack as fast as you can if you wish."));
 					conversation.push(new ChatLine("King", "You: I was just about to say the same thing!"));
 				}
 				else {

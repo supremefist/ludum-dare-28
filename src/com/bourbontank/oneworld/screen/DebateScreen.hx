@@ -46,7 +46,7 @@ class DebateScreen extends BaseTargetingScreen
 	var finished:Bool = false;
 	var finishedTimer:Int = 0;
 	
-	private var pauseDuration:Int = 500;
+	private var pauseDuration:Int = 2000;
 	
 	private var victory:Bool = false;
 	
@@ -117,6 +117,7 @@ class DebateScreen extends BaseTargetingScreen
 		}
 		
 		if ((chamber.debateDone()) && (!finished)) {
+			
 			selectReward = true;
 			
 			victory = false;

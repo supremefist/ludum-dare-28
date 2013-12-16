@@ -13,19 +13,28 @@ class GameSound
 	var control:Control;
 	private var currentChannel:SoundChannel = null;
 	
-	var music:Sound;
+	var earthMusic:Sound;
 	private var musicTransform:SoundTransform;
 	
 	public function new(control:Control) 
 	{
 		this.control = control;
 	
-		music = Assets.getSound("sfx/music.mp3");
+		earthMusic = Assets.getSound("sfx/earth.mp3");
+		
 		musicTransform = new SoundTransform();
 	}
 	
-	public function playMusic()
+	public function playFX(name:String) {
+		var sound:Sound = Assets.getSound("sfx/" + name + ".wav");
+		sound.play();
+	}
+	
+	public function playEarthMusic()
 	{
-		currentChannel = music.play (0, 99999, musicTransform);
+		if (currentChannel != null) {
+			currentChannel.stop();
+		}
+		currentChannel = earthMusic.play (0, 99999, musicTransform);
 	}
 }

@@ -174,6 +174,8 @@ class WorldScreen extends BaseClickingScreen
 		for (continent in control.continents) {
 			if (continent.highlighted) {
 				if (!continent.friendly) {
+					//control.sound.playFX("travel");
+					
 					// To battle!
 					var debateScreen:DebateScreen = new DebateScreen(display, control, continent);
 					debateScreen.continent = continent;

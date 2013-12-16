@@ -125,6 +125,7 @@ class SplashScreen extends BaseClickingScreen
 			fadeTextIn();
 		});
 		
+		control.sound.playEarthMusic();
 	}
 	
 	public function fadeTextIn() {

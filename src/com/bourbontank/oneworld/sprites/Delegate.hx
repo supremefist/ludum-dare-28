@@ -150,6 +150,10 @@ class Delegate extends EntitySprite
 		
 		if (morale <= 0) {
 			animatedSprite.showBehavior("surrender");
+			chamber.screen.control.sound.playFX("surrender");
+		}
+		else {
+			chamber.screen.control.sound.playFX("hit");
 		}
 	}
 	
@@ -225,6 +229,8 @@ class Delegate extends EntitySprite
 		animatedSprite.showBehavior("idling");
 		animateThrow();
 		Actuate.timer (actDuration / 1200).onComplete ( function() {
+			chamber.screen.control.sound.playFX("throw");
+			
 			// Calculate required velocity
 			var projectile:Projectile = createProjectile();
 			
