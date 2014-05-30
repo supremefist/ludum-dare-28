@@ -3,7 +3,7 @@ INTRO
 
 Narrator: You are the king of the great kingdom of Monaco!  You have ruled it honorably for many years.  Unfortunately, the scientist in Monaco has determined that the world will be uninhabitable within one year due to global warming!  This is likely to affect us negatively.  You know what they say: "You only get one world!".
 
-Scientist: Your Majesty, I do believe it's time for Monaco to step in and save the world! We shall do it by convincing all the nations of the world to abandon their selfish carbon emmissions, continent by continent!  How hard could it be?  Your debating skills are unmatched.
+Scientist: Your Majesty, I do believe it's time for Monaco to step in and save the world! We shall do it by convincing all the nations of the world to abandon their selfish carbon emissions, continent by continent!  How hard could it be?  Your debating skills are unmatched.
 
 You: Aye, they are unmatched, but I swore I would never use them again!  Remember what happened last time when I debated that young man...
 
@@ -51,14 +51,14 @@ Victory: Show victory screen
 VICTORY
 =======
 
-The earth is saved!  Carbon emmissions have reduced by more than 1%!  All thanks to the vast and famous nation of Monaco!
+The earth is saved!  Carbon emissions have reduced by more than 1%!  All thanks to the vast and famous nation of Monaco!
 
 (Play again)
 
 DEFEAT
 =======
 
-The earth is lies in ruins!  Well, maybe not ruins, but carbon emmissions are holding steady!  Earth faces certain destruction sometime in the future...
+The earth is lies in ruins!  Well, maybe not ruins, but carbon emissions are holding steady!  Earth faces certain destruction sometime in the future...
 
 (Play again)
 
